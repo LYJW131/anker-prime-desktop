@@ -1,0 +1,19 @@
+{
+  "name": "Anker Prime Desktop",
+  "slug": "anker-prime-desktop",
+  "identifier": "me.lyjw.ankerprimedesktop",
+  "version": "1.0.0",
+  "icon": "resources/icon.png",
+  "out": "build",
+  "macos": {
+    "minimumSystemVersion": "13.0",
+    "infoPlist": {
+      "LSUIElement": true,
+      "NSBluetoothAlwaysUsageDescription": "Anker Prime Desktop uses Bluetooth to read and control your Anker devices."
+    }
+  },
+  "i18n": {
+    "dir": "locales",
+    "source": "en"
+  }
+}

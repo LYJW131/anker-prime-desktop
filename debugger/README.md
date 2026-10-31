@@ -1,0 +1,146 @@
+# debugger — anker_prime_ble
+
+Debugging and reverse-engineering tools for the two Anker Prime devices on my
+desk, which turned out to speak the same BLE protocol:
+
+| device | model | what it reports |
+|---|---|---|
+| Prime Power Bank (20K, 220W) | A110G | battery %, per-port V/A/W both directions, totals, time to full, thermal state, 2 temperatures, Pomodoro timer |
+| Prime 160W charger | A2687 | per-port V/A/W, cable rating, fast-charge protocol, attached-device identity |
+
+Both push telemetry at roughly 1 Hz over BLE once a session is open. The usual
+writes are the session handshake and a status read. The charger can also select
+an already-uploaded custom screensaver (`0x021F`) and push JPEG pixels
+(`0x0220` / `0x0221`). Listing and naming those pictures is HTTP, documented
+in [docs/screensaver.md](../docs/screensaver.md).
+
+## Why one repository
+
+The two devices share the entire transport — same GATT service, same `FF 09`
+framing, same fixed-key AES-GCM, same ECDH P-256 handshake. Only the payload
+inside the TLVs differs. So the split is:
+
+```
+anker_prime_ble/
+├── ff09.py       shared transport: framing, TLV, AES-GCM, ECDH handshake
+├── decode.py     shared field annotator + differential tracker
+├── device.py     shared port/state shapes and the device interface
+├── session.py    shared BLE session, handshake driver, capture recording
+├── charger.py    A2687 telemetry + 0x021F select + 0x0220/0x0221 transfer
+├── powerbank.py  A110G telemetry decoding
+├── cloud.py      Anker login, screensaver list, OSS token, add_manual
+├── image.py      240×240 JPEG crop + CRC32 hash_code
+├── cover.py      register a local image and push pixels over BLE
+└── cli.py        one CLI for both
+```
+
+A device module is just a `DeviceProfile` plus a decoder. Adding a third Anker
+Prime device means writing one file — the transport, session, and CLI do not
+change.
+
+## Setup
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+```
+
+Verified on CPython 3.14; any 3.11+ should work.
+
+## Use
+
+```bash
+.venv/bin/python -m anker_prime_ble scan                          # find devices
+.venv/bin/python -m anker_prime_ble status <addr>                 # live dashboard
+.venv/bin/python -m anker_prime_ble watch  <addr>                 # only what changes
+.venv/bin/python -m anker_prime_ble session <addr> --record cap.jsonl
+.venv/bin/python -m anker_prime_ble replay cap.jsonl --decode     # offline, no radio
+.venv/bin/python -m anker_prime_ble covers list                   # cloud custom covers
+.venv/bin/python -m anker_prime_ble covers select <addr> --seq 1  # BLE, pixels already on the charger
+.venv/bin/python -m anker_prime_ble covers upload photo.jpg       # crop + cloud register; add --address to BLE-push
+.venv/bin/python -m anker_prime_ble covers push --jpeg photo.jpg --id 1001  # BLE only, no cloud
+```
+
+`scan` guesses the device from its advertised name. Everything else takes
+`--device charger|powerbank` (default `powerbank`, or set `$ANKER_DEVICE`).
+
+The charger additionally needs an Anker account ID — `--user-id` or
+`$ANKER_USER_ID` — or its stream never starts. The power bank needs nothing.
+
+```
+AJ7DLCH0F49600286  fw v0.0.5.2  [Charging]
+  battery 58.85%   time left 0h00m   charging=False
+  in 0.0W    out 117.7W
+    C1: 14.9V 1.9A 28.6W out
+    C2: 19.9V 4.4A 89.1W out
+    A : idle
+  pomodoro 20 min (on)
+  temps 45C / 46C
+```
+
+### macOS Bluetooth
+
+CoreBluetooth is gated by TCC, and a process whose host app has no
+`NSBluetoothAlwaysUsageDescription` is **killed on sight** — no traceback, no
+output, just an abort that looks like a hang. Run these from Terminal.app or
+another terminal that has been granted Bluetooth access.
+
+A device already connected to a phone app will not advertise, so quit the Anker
+app before scanning. The power bank also sleeps on its own; press its button if
+a command sits waiting.
+
+## Documentation
+
+- **[NOTES.md](../NOTES.md)** — how this was worked out, including every hypothesis
+  that turned out to be wrong and what killed it. Read this before extending a
+  decoder.
+- **[docs/powerbank.md](../docs/powerbank.md)** — A110G field map with the evidence
+  for each field.
+- **[docs/charger.md](../docs/charger.md)** — A2687 field map.
+- **[docs/screensaver.md](../docs/screensaver.md)** — list and download the
+  charger's custom lock-screen pictures, select one over BLE, and the
+  unfinished local-image upload path.
+- **[spec/](../spec/)** — the cross-language contract: generated constants for
+  Swift, and a decoded-state fixture per capture. Other implementations replay
+  the fixtures and must reproduce them field for field, which is what stops a
+  reimplementation from drifting on what a byte *means*.
+- **[captures/](../captures/)** — 13 recorded sessions: eleven power bank ones
+  covering charge, discharge, pass-through, dual output, thermal throttling and a
+  firmware upgrade, plus two charger sessions with and without an account ID.
+  These
+  are the evidence behind the field maps and double as regression fixtures:
+  change a decoder, replay all of them, see whether they still make sense.
+
+## Reimplementing this elsewhere
+
+The macOS reporter that consumes this protocol is native Swift doing
+CoreBluetooth in-process, so it cannot share code with Python. It shares the
+contract in [spec/](../spec/) instead: generated constants, plus fixtures it replays
+as a conformance test. `.venv/bin/python ../tools/contract.py verify` fails if either has
+gone stale against the Python modules.
+
+## Prior work
+
+The charger side of this repository would not exist without
+**[Hyper-Beast/Anker_Prime_160W_WebBLE](https://github.com/Hyper-Beast/Anker_Prime_160W_WebBLE)**
+— a Web Bluetooth telemetry page for the A2687. Its `AnkerPrimeWebBle_A2687.js`
+is where the FF09 framing, the fixed AES-GCM key and IV, the ECDH handshake
+sequence and the cable-code tables in `ff09.py` and `charger.py` originally come
+from. This repository's charger decoder began as a Python port of it, and the
+power bank work started by pointing that same handshake at a different device
+and finding it worked unchanged.
+
+That project in turn credits [flip-dots/SolixBLE](https://github.com/flip-dots/SolixBLE)
+and [atc1441/Anker_Prime_BLE_hacking](https://github.com/atc1441/Anker_Prime_BLE_hacking).
+
+Note that the upstream repository states no license, so there is no explicit
+grant covering the parts derived from it. Keep that in mind before publishing
+this one.
+
+## Status
+
+Both devices are decoded and confirmed against hardware, including the charger's
+pushed realtime stream.
+
+What remains: a handful of the power bank's `0x0200` settings bytes, and the
+150 W A1903 charging base, which unlike the 100 W A1902 allows output while
+docked.

@@ -15,6 +15,139 @@
     "command_status": 512,
     "command_realtime": 522
   },
+  "handshake": {
+    "tx_header": "0300",
+    "cmd_0022_a3": "808fffff",
+    "cmd_0022_a5": "CST-8",
+    "cmd_020a_a2": "045553",
+    "account_id_length": 40,
+    "public_key_length": 64
+  },
+  "cover": {
+    "command_select": 543,
+    "command_transfer_start": 544,
+    "command_transfer_data": 545,
+    "type_custom": 3,
+    "chunk_size": 156,
+    "ack_every": 10,
+    "url_key": "SmallChargingUrl",
+    "result_codes": {
+      "ok": 0,
+      "bad_body": 4,
+      "transfer_complete": 16,
+      "not_on_device": 17,
+      "overflow": 18
+    }
+  },
+  "timing_ms": {
+    "pause_handshake": 100,
+    "pause_session": 120,
+    "pause_status": 200,
+    "pause_select": 150,
+    "pause_transfer": 200,
+    "pause_chunk": 40,
+    "pause_after_chunks": 400,
+    "reply_timeout": 6000,
+    "chunk_ack_timeout": 5000,
+    "last_ack_timeout": 10000
+  },
+  "vectors": {
+    "account_id": "0123456789abcdef0123456789abcdef01234567",
+    "public_key": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
+    "requests": [
+      {
+        "name": "handshake_0001",
+        "group": 1,
+        "command": 1,
+        "expects_response": true,
+        "body": "a10401000000"
+      },
+      {
+        "name": "handshake_0003",
+        "group": 1,
+        "command": 3,
+        "expects_response": true,
+        "body": "a10401000000a30120a40200f0"
+      },
+      {
+        "name": "handshake_0029",
+        "group": 1,
+        "command": 41,
+        "expects_response": true,
+        "body": "a10401000000"
+      },
+      {
+        "name": "handshake_0005",
+        "group": 1,
+        "command": 5,
+        "expects_response": true,
+        "body": "a10402000000a30120a4022901a50144a60102"
+      },
+      {
+        "name": "key_exchange",
+        "group": 1,
+        "command": 33,
+        "expects_response": true,
+        "body": "a140000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f"
+      },
+      {
+        "name": "session_0022",
+        "group": 1,
+        "command": 34,
+        "expects_response": false,
+        "body": "a10401000000a304808fffffa5054353542d38"
+      },
+      {
+        "name": "session_0027",
+        "group": 1,
+        "command": 39,
+        "expects_response": false,
+        "body": "a10401000000a22830313233343536373839616263646566303132333435363738396162636465663031323334353637"
+      },
+      {
+        "name": "status_probe",
+        "group": 15,
+        "command": 512,
+        "expects_response": null,
+        "body": "a10121fe0401000000"
+      },
+      {
+        "name": "realtime_probe",
+        "group": 15,
+        "command": 522,
+        "expects_response": null,
+        "body": "a10121a203045553a3290430313233343536373839616263646566303132333435363738396162636465663031323334353637a5020101fe0401000000"
+      },
+      {
+        "name": "cover_select",
+        "group": 15,
+        "command": 543,
+        "expects_response": null,
+        "body": "a10121a3020103a40504e75f0000a50504cadda21dfd1100536d616c6c4368617267696e6755726cfe050301000000"
+      },
+      {
+        "name": "cover_transfer_start",
+        "group": 15,
+        "command": 544,
+        "expects_response": null,
+        "body": "a10121a2020101a305049eb10000a40504efbf26c1a5050335630000a602010aa703029c00a80302a300fe050301000000"
+      },
+      {
+        "name": "cover_chunk",
+        "group": 15,
+        "command": 545,
+        "expects_response": null,
+        "body": "a10121a203020500a39d04000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b"
+      },
+      {
+        "name": "cover_chunk_short",
+        "group": 15,
+        "command": 545,
+        "expects_response": null,
+        "body": "a10121a20302a200a39d04000102030405060708090000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      }
+    ]
+  },
   "devices": {
     "charger": {
       "name": "Anker Prime 160W charger \u2014 A2687",
@@ -70,6 +203,20 @@
           "01": "Apple PD Fast Charging",
           "02": "Samsung Fast Charging",
           "03": "Samsung Super Fast Charging"
+        },
+        "cable_profiles": {
+          "0100": [
+            "5A-100W MAX",
+            null
+          ],
+          "0200": [
+            "EPR-240W MAX",
+            null
+          ],
+          "0201": [
+            "EPR-240W MAX",
+            "Apple PD Fast Charging"
+          ]
         },
         "vendor_names": {
           "0x05AC": "Apple",

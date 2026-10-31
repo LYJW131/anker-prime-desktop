@@ -348,6 +348,37 @@ on the charger.
 
 ## Putting a new picture on the charger
 
+### Without the cloud
+
+The cloud is optional. The charger never contacts it and keeps its own
+table of which ids it holds pixels for, so any id works:
+
+```
+local image → 240×240 JPEG → CRC-32 → BLE 0x021F, 0x0220, 0x0221 × N under an id we choose
+```
+
+Verified on this unit (2026-11-01, firmware v0.0.5.2) with id `1001`, a
+Pillow-encoded 4:4:4 baseline JPEG and its CRC-32, no login and no cloud
+row: `0x021F` ACKed `11 A1 01 31` (no pixels yet), `0x0220` ACKed
+`00 A1 01 31`, every tenth `0x0221` ACKed `00 A1 01 31 A2=<next index>`,
+and the last chunk ACKed with result code **`0x10`**
+(`10 A1 01 31 A2 03 02 3B 00`, 59 chunks). `0xE1` then moved
+`24551 → 1001` and the screen showed the picture.
+
+```
+.venv/bin/python -m anker_prime_ble covers push --jpeg photo.png --id 1001
+```
+
+A 4:2:0 JPEG from Go's `image/jpeg` displays as well (id `1002`, 92 chunks,
+same ACK pattern), so the chroma subsampling does not matter.
+
+Keep local ids below 65536: `0xE1` reports only the low 16 bits, which is
+how a select is confirmed. Still untested: whether pixels survive a power
+cycle, whether a wrong `hash_code` is rejected, and what the Anker app
+shows when the current id is not in its cloud list.
+
+### Through the cloud, as the Anker app does
+
 ```
 local image → 240×240 JPEG → OSS + add_manual (id / hash_code) → BLE pixels → 0x021F
 ```
