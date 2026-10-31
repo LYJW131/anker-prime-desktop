@@ -376,7 +376,7 @@ class CloudSession:
 
 
 def download_bytes(url: str) -> bytes:
-    req = urllib.request.Request(url, headers={"user-agent": "anker-prime-mac"})
+    req = urllib.request.Request(url, headers={"user-agent": "anker-prime-desktop"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         return resp.read()
 

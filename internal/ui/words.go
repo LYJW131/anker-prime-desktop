@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/LYJW131/anker-prime-mac/internal/ble"
-	"github.com/LYJW131/anker-prime-mac/internal/link"
-	"github.com/LYJW131/anker-prime-mac/internal/store"
-	"github.com/LYJW131/anker-prime-mac/locales"
+	"github.com/LYJW131/anker-prime-desktop/internal/ble"
+	"github.com/LYJW131/anker-prime-desktop/internal/link"
+	"github.com/LYJW131/anker-prime-desktop/internal/store"
+	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
 // ErrText says an error of the links, the backend or the store in the

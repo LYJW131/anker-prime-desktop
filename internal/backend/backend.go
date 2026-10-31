@@ -15,14 +15,14 @@ import (
 
 	"github.com/egoist/mygo"
 
-	"github.com/LYJW131/anker-prime-mac/internal/ble"
-	"github.com/LYJW131/anker-prime-mac/internal/cloud"
-	"github.com/LYJW131/anker-prime-mac/internal/cover"
-	"github.com/LYJW131/anker-prime-mac/internal/device"
-	"github.com/LYJW131/anker-prime-mac/internal/link"
-	"github.com/LYJW131/anker-prime-mac/internal/model"
-	"github.com/LYJW131/anker-prime-mac/internal/settings"
-	"github.com/LYJW131/anker-prime-mac/internal/store"
+	"github.com/LYJW131/anker-prime-desktop/internal/ble"
+	"github.com/LYJW131/anker-prime-desktop/internal/cloud"
+	"github.com/LYJW131/anker-prime-desktop/internal/cover"
+	"github.com/LYJW131/anker-prime-desktop/internal/device"
+	"github.com/LYJW131/anker-prime-desktop/internal/link"
+	"github.com/LYJW131/anker-prime-desktop/internal/model"
+	"github.com/LYJW131/anker-prime-desktop/internal/settings"
+	"github.com/LYJW131/anker-prime-desktop/internal/store"
 )
 
 // userIDKey is the Keychain item of the Anker account ID.

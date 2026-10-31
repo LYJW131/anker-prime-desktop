@@ -14,10 +14,10 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 
-	"github.com/LYJW131/anker-prime-mac/internal/settings"
-	"github.com/LYJW131/anker-prime-mac/internal/store"
-	appui "github.com/LYJW131/anker-prime-mac/internal/ui"
-	"github.com/LYJW131/anker-prime-mac/locales"
+	"github.com/LYJW131/anker-prime-desktop/internal/settings"
+	"github.com/LYJW131/anker-prime-desktop/internal/store"
+	appui "github.com/LYJW131/anker-prime-desktop/internal/ui"
+	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
 // Backend drives the devices; see ui.Backend for its contract. The demo
@@ -81,7 +81,7 @@ const viewStateFile = "view.json"
 // Run runs the app until it quits.
 func Run(opts Options) error {
 	a := &App{opts: opts, be: opts.Backend, log: slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{Level: slog.LevelInfo}))}
-	mygo.App.SetName("Anker Prime")
+	mygo.App.SetName("Anker Prime Desktop")
 	if opts.DataDir != "" {
 		mygo.App.SetPath(mygo.PathUserData, filepath.Join(opts.DataDir, "data"))
 		mygo.App.SetPath(mygo.PathCache, filepath.Join(opts.DataDir, "cache"))

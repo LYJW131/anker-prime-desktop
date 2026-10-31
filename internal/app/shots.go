@@ -8,9 +8,9 @@ import (
 
 	"github.com/egoist/mygo"
 
-	"github.com/LYJW131/anker-prime-mac/internal/link"
-	"github.com/LYJW131/anker-prime-mac/internal/model"
-	appui "github.com/LYJW131/anker-prime-mac/internal/ui"
+	"github.com/LYJW131/anker-prime-desktop/internal/link"
+	"github.com/LYJW131/anker-prime-desktop/internal/model"
+	appui "github.com/LYJW131/anker-prime-desktop/internal/ui"
 )
 
 // holder is a backend whose devices can be held in a phase, as the

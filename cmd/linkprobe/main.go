@@ -17,11 +17,11 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/LYJW131/anker-prime-mac/internal/ble"
-	"github.com/LYJW131/anker-prime-mac/internal/cover"
-	"github.com/LYJW131/anker-prime-mac/internal/link"
-	"github.com/LYJW131/anker-prime-mac/internal/model"
-	"github.com/LYJW131/anker-prime-mac/internal/settings"
+	"github.com/LYJW131/anker-prime-desktop/internal/ble"
+	"github.com/LYJW131/anker-prime-desktop/internal/cover"
+	"github.com/LYJW131/anker-prime-desktop/internal/link"
+	"github.com/LYJW131/anker-prime-desktop/internal/model"
+	"github.com/LYJW131/anker-prime-desktop/internal/settings"
 )
 
 func main() {

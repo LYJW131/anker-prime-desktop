@@ -1,6 +1,6 @@
 GO ?= go
 SHOTS ?= build/shots
-APP = build/darwin-$(shell $(GO) env GOARCH)/Anker Prime.app
+APP = build/darwin-$(shell $(GO) env GOARCH)/Anker Prime Desktop.app
 
 .PHONY: build app run demo test vet shots
 

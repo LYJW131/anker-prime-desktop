@@ -8,8 +8,8 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"github.com/LYJW131/anker-prime-mac/internal/settings"
-	"github.com/LYJW131/anker-prime-mac/locales"
+	"github.com/LYJW131/anker-prime-desktop/internal/settings"
+	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
 // settingsForm is the Settings page's state between frames.

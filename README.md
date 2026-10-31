@@ -1,7 +1,7 @@
-# anker-prime-mac
+# anker-prime-desktop
 
-**Anker Prime** is a macOS app that shows and controls Anker devices over
-Bluetooth, in a window and from the menu bar. Add a device, watch its ports,
+**Anker Prime Desktop** shows and controls Anker devices over Bluetooth, in
+a window and from the menu bar. Add a device, watch its ports,
 battery and power live, choose what the menu bar title and its dropdown
 panel show, and push your own pictures to a charger's screen — no Anker
 account login and no cloud needed.
@@ -17,15 +17,17 @@ Other Anker Prime devices show up in the add-device list as not supported
 yet. [docs/adding-a-device.md](docs/adding-a-device.md) is the path from such
 a device to a supported model.
 
-The app speaks English, Simplified Chinese and Japanese.
+The app speaks English, Simplified Chinese and Japanese. It runs on macOS
+13 and later; the UI is MyGo's and builds for Windows and Linux too, which
+still need a Bluetooth backend (`internal/ble` drives CoreBluetooth only).
 
 ## Build and run
 
 Needs Go 1.27.3 or later on macOS 13+.
 
 ```bash
-go tool mygo build -skip-dmg          # build/darwin-arm64/Anker Prime.app
-open "build/darwin-arm64/Anker Prime.app"
+go tool mygo build -skip-dmg          # build/darwin-arm64/Anker Prime Desktop.app
+open "build/darwin-arm64/Anker Prime Desktop.app"
 ```
 
 The first launch asks for Bluetooth access. The app lives in the menu bar;

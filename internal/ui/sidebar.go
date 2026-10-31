@@ -5,7 +5,7 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"github.com/LYJW131/anker-prime-mac/locales"
+	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
 // sidebar is the window's left column: the traffic lights and the sidebar

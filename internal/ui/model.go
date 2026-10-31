@@ -11,9 +11,9 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"github.com/LYJW131/anker-prime-mac/internal/cover"
-	"github.com/LYJW131/anker-prime-mac/internal/settings"
-	"github.com/LYJW131/anker-prime-mac/internal/store"
+	"github.com/LYJW131/anker-prime-desktop/internal/cover"
+	"github.com/LYJW131/anker-prime-desktop/internal/settings"
+	"github.com/LYJW131/anker-prime-desktop/internal/store"
 )
 
 // Backend is what drives the devices: the views call it, and it hands

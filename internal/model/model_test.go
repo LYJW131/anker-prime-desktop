@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/LYJW131/anker-prime-mac/internal/device"
+	"github.com/LYJW131/anker-prime-desktop/internal/device"
 )
 
 func mfr(t *testing.T, h string) map[uint16][]byte {

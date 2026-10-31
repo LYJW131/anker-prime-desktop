@@ -145,7 +145,7 @@ inherits the permission:
 
 ```bash
 go tool mygo build -skip-dmg
-"build/darwin-arm64/Anker Prime.app/Contents/MacOS/Anker Prime" -data /tmp/anker-dev
+"build/darwin-arm64/Anker Prime Desktop.app/Contents/MacOS/Anker Prime Desktop" -data /tmp/anker-dev
 ```
 
 Add the device from the add-device list, watch the log for `connected`,

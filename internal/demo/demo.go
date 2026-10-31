@@ -14,12 +14,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/LYJW131/anker-prime-mac/internal/cloud"
-	"github.com/LYJW131/anker-prime-mac/internal/cover"
-	"github.com/LYJW131/anker-prime-mac/internal/link"
-	"github.com/LYJW131/anker-prime-mac/internal/model"
-	"github.com/LYJW131/anker-prime-mac/internal/settings"
-	"github.com/LYJW131/anker-prime-mac/internal/store"
+	"github.com/LYJW131/anker-prime-desktop/internal/cloud"
+	"github.com/LYJW131/anker-prime-desktop/internal/cover"
+	"github.com/LYJW131/anker-prime-desktop/internal/link"
+	"github.com/LYJW131/anker-prime-desktop/internal/model"
+	"github.com/LYJW131/anker-prime-desktop/internal/settings"
+	"github.com/LYJW131/anker-prime-desktop/internal/store"
 )
 
 // The demo's peripherals, named as the real devices advertise.

@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strconv"
 
-	"github.com/LYJW131/anker-prime-mac/internal/ff09"
+	"github.com/LYJW131/anker-prime-desktop/internal/ff09"
 )
 
 // u16 reads a little-endian u16 at offset, if the data is long enough.

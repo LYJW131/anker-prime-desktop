@@ -6,9 +6,9 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"github.com/LYJW131/anker-prime-mac/internal/device"
-	"github.com/LYJW131/anker-prime-mac/internal/model"
-	"github.com/LYJW131/anker-prime-mac/locales"
+	"github.com/LYJW131/anker-prime-desktop/internal/device"
+	"github.com/LYJW131/anker-prime-desktop/internal/model"
+	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
 // ratedW is a charger's scale: its model's rated output.

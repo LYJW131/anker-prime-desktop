@@ -19,7 +19,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/LYJW131/anker-prime-mac/internal/ble"
+	"github.com/LYJW131/anker-prime-desktop/internal/ble"
 )
 
 const (

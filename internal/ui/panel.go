@@ -6,8 +6,8 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"github.com/LYJW131/anker-prime-mac/internal/model"
-	"github.com/LYJW131/anker-prime-mac/locales"
+	"github.com/LYJW131/anker-prime-desktop/internal/model"
+	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
 // PanelWidth is the tray panel's width in DIPs.

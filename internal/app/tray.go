@@ -5,8 +5,8 @@ import (
 
 	"github.com/egoist/mygo"
 
-	appui "github.com/LYJW131/anker-prime-mac/internal/ui"
-	"github.com/LYJW131/anker-prime-mac/locales"
+	appui "github.com/LYJW131/anker-prime-desktop/internal/ui"
+	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
 // trayItem is the menu bar item: its icon, its title of the values the

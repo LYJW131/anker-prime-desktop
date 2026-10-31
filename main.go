@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/LYJW131/anker-prime-mac/internal/app"
-	"github.com/LYJW131/anker-prime-mac/internal/backend"
-	"github.com/LYJW131/anker-prime-mac/internal/demo"
+	"github.com/LYJW131/anker-prime-desktop/internal/app"
+	"github.com/LYJW131/anker-prime-desktop/internal/backend"
+	"github.com/LYJW131/anker-prime-desktop/internal/demo"
 )
 
 func main() {

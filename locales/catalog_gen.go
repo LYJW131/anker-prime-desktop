@@ -36,13 +36,13 @@ type Messages struct{ locale string }
 // source language.
 func In(locale string) Messages { return Messages{locale} }
 
-// AppName says "Anker Prime"
+// AppName says "Anker Prime Desktop"
 // in the language the app shows.
 //
 // The window's title.
 func AppName() string { return In(i18n.Locale()).AppName() }
 
-// AppName says "Anker Prime"
+// AppName says "Anker Prime Desktop"
 // in the language of msgs.
 //
 // The window's title.
@@ -148,13 +148,13 @@ func (msgs Messages) MenuView() string {
 	return Catalog.Format(msgs.locale, "menuView", nil)
 }
 
-// TrayOpen says "Open Anker Prime"
+// TrayOpen says "Open Anker Prime Desktop"
 // in the language the app shows.
 //
 // Menu bar item's menu and the panel's button.
 func TrayOpen() string { return In(i18n.Locale()).TrayOpen() }
 
-// TrayOpen says "Open Anker Prime"
+// TrayOpen says "Open Anker Prime Desktop"
 // in the language of msgs.
 //
 // Menu bar item's menu and the panel's button.
@@ -176,13 +176,13 @@ func (msgs Messages) TraySettings() string {
 	return Catalog.Format(msgs.locale, "traySettings", nil)
 }
 
-// TrayQuit says "Quit Anker Prime"
+// TrayQuit says "Quit Anker Prime Desktop"
 // in the language the app shows.
 //
 // Menu bar item's menu.
 func TrayQuit() string { return In(i18n.Locale()).TrayQuit() }
 
-// TrayQuit says "Quit Anker Prime"
+// TrayQuit says "Quit Anker Prime Desktop"
 // in the language of msgs.
 //
 // Menu bar item's menu.
@@ -542,13 +542,13 @@ func (msgs Messages) DeadBluetoothOffLine() string {
 	return Catalog.Format(msgs.locale, "deadBluetoothOffLine", nil)
 }
 
-// DeadUnauthorizedLine says "Allow Anker Prime in System Settings › Privacy & Security › Bluetooth"
+// DeadUnauthorizedLine says "Allow Anker Prime Desktop in System Settings › Privacy & Security › Bluetooth"
 // in the language the app shows.
 //
 // A device's page while it shows nothing but its state.
 func DeadUnauthorizedLine() string { return In(i18n.Locale()).DeadUnauthorizedLine() }
 
-// DeadUnauthorizedLine says "Allow Anker Prime in System Settings › Privacy & Security › Bluetooth"
+// DeadUnauthorizedLine says "Allow Anker Prime Desktop in System Settings › Privacy & Security › Bluetooth"
 // in the language of msgs.
 //
 // A device's page while it shows nothing but its state.

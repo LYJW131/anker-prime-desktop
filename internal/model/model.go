@@ -8,7 +8,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/LYJW131/anker-prime-mac/internal/device"
+	"github.com/LYJW131/anker-prime-desktop/internal/device"
 )
 
 // ID is a model number, as Anker prints it on the device.

@@ -6,7 +6,7 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"github.com/LYJW131/anker-prime-mac/internal/store"
+	"github.com/LYJW131/anker-prime-desktop/internal/store"
 )
 
 // sparkWindow is the span a sparkline shows, newest at the right.

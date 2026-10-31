@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/LYJW131/anker-prime-mac/internal/ff09"
+	"github.com/LYJW131/anker-prime-desktop/internal/ff09"
 )
 
 // ChargerDecoder fills a Charger from decrypted FF09 payloads. It ports

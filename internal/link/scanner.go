@@ -3,9 +3,9 @@ package link
 import (
 	"sync"
 
-	"github.com/LYJW131/anker-prime-mac/internal/ble"
-	"github.com/LYJW131/anker-prime-mac/internal/ff09"
-	"github.com/LYJW131/anker-prime-mac/internal/model"
+	"github.com/LYJW131/anker-prime-desktop/internal/ble"
+	"github.com/LYJW131/anker-prime-desktop/internal/ff09"
+	"github.com/LYJW131/anker-prime-desktop/internal/model"
 )
 
 // Scanner shares the central's one scan between everyone who wants

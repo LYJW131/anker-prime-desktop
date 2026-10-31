@@ -1,4 +1,4 @@
-module github.com/LYJW131/anker-prime-mac
+module github.com/LYJW131/anker-prime-desktop
 
 go 1.27.3
 

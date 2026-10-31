@@ -1,7 +1,7 @@
-# anker-prime-mac
+# anker-prime-desktop
 
-A macOS app (Go, MyGo native UI) that shows and controls Anker devices over
-Bluetooth, plus the Python debugger the protocol was reverse-engineered with.
+A desktop app (Go, MyGo native UI) that shows and controls Anker devices over
+Bluetooth, on macOS for now,, plus the Python debugger the protocol was reverse-engineered with.
 README.md has the layout; docs/adding-a-device.md the path for a new model.
 
 ## Rules
@@ -41,7 +41,7 @@ README.md has the layout; docs/adding-a-device.md the path for a new model.
 go vet ./... && go test ./...
 debugger/.venv/bin/python tools/contract.py verify
 go tool mygo build -skip-dmg
-"build/darwin-arm64/Anker Prime.app/Contents/MacOS/Anker Prime" -demo -shots /tmp/anker-shots
+"build/darwin-arm64/Anker Prime Desktop.app/Contents/MacOS/Anker Prime Desktop" -demo -shots /tmp/anker-shots
 ```
 
 Look at the shots in both themes (add `-lang en`, `-lang ja`). CoreBluetooth

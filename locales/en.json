@@ -1,6 +1,6 @@
 {
   "@@locale": "en",
-  "appName": "Anker Prime",
+  "appName": "Anker Prime Desktop",
   "@appName": {
     "description": "The window's title."
   },
@@ -32,7 +32,7 @@
   "@menuView": {
     "description": "The View menu of the menu bar."
   },
-  "trayOpen": "Open Anker Prime",
+  "trayOpen": "Open Anker Prime Desktop",
   "@trayOpen": {
     "description": "Menu bar item's menu and the panel's button."
   },
@@ -40,7 +40,7 @@
   "@traySettings": {
     "description": "Menu bar item's menu."
   },
-  "trayQuit": "Quit Anker Prime",
+  "trayQuit": "Quit Anker Prime Desktop",
   "@trayQuit": {
     "description": "Menu bar item's menu."
   },
@@ -168,7 +168,7 @@
   "@deadBluetoothOffLine": {
     "description": "A device's page while it shows nothing but its state."
   },
-  "deadUnauthorizedLine": "Allow Anker Prime in System Settings › Privacy & Security › Bluetooth",
+  "deadUnauthorizedLine": "Allow Anker Prime Desktop in System Settings › Privacy & Security › Bluetooth",
   "@deadUnauthorizedLine": {
     "description": "A device's page while it shows nothing but its state."
   },

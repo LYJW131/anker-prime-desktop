@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/LYJW131/anker-prime-mac/internal/ble"
-	"github.com/LYJW131/anker-prime-mac/internal/device"
-	"github.com/LYJW131/anker-prime-mac/internal/ff09"
+	"github.com/LYJW131/anker-prime-desktop/internal/ble"
+	"github.com/LYJW131/anker-prime-desktop/internal/device"
+	"github.com/LYJW131/anker-prime-desktop/internal/ff09"
 )
 
 // session is one connection: it owns the cipher, the reassembly buffer and

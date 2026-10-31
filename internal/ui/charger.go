@@ -5,8 +5,8 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"github.com/LYJW131/anker-prime-mac/internal/device"
-	"github.com/LYJW131/anker-prime-mac/locales"
+	"github.com/LYJW131/anker-prime-desktop/internal/device"
+	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
 // chargerLive is a charger's live tab: its total output split among its

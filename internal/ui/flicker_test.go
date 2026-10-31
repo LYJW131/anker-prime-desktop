@@ -9,8 +9,8 @@ import (
 
 	"github.com/egoist/mygo/ui"
 
-	"github.com/LYJW131/anker-prime-mac/internal/demo"
-	"github.com/LYJW131/anker-prime-mac/locales"
+	"github.com/LYJW131/anker-prime-desktop/internal/demo"
+	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
 // The flicker tests. A request that answers within a frame must not show

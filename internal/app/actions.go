@@ -5,10 +5,10 @@ import (
 
 	"github.com/egoist/mygo"
 
-	"github.com/LYJW131/anker-prime-mac/internal/settings"
-	"github.com/LYJW131/anker-prime-mac/internal/store"
-	appui "github.com/LYJW131/anker-prime-mac/internal/ui"
-	"github.com/LYJW131/anker-prime-mac/locales"
+	"github.com/LYJW131/anker-prime-desktop/internal/settings"
+	"github.com/LYJW131/anker-prime-desktop/internal/store"
+	appui "github.com/LYJW131/anker-prime-desktop/internal/ui"
+	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
 // The methods below implement ui.Shell.
