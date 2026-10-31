@@ -18,17 +18,22 @@ yet. [docs/adding-a-device.md](docs/adding-a-device.md) is the path from such
 a device to a supported model.
 
 The app speaks English, Simplified Chinese and Japanese. It runs on macOS
-13 and later; the UI is MyGo's and builds for Windows and Linux too, which
-still need a Bluetooth backend (`internal/ble` drives CoreBluetooth only).
+13 and later, Windows 10 and later, and Linux with BlueZ.
 
 ## Install
 
-Download the disk image for your Mac from
-[Releases](https://github.com/LYJW131/anker-prime-desktop/releases). The app
-is not notarized yet, so the first launch needs a right-click → Open (or
-System Settings → Privacy & Security → Open Anyway). After that it updates
-itself: it checks GitHub once a day, and on demand from "Check for
-Updates…" in its menus.
+Get it from [Releases](https://github.com/LYJW131/anker-prime-desktop/releases):
+
+- **macOS 13+**: the disk image for your Mac. The app is not notarized yet,
+  so the first launch needs a right-click → Open (or System Settings →
+  Privacy & Security → Open Anyway).
+- **Windows 10+**: `anker-prime-desktop-setup-<version>-<arch>.exe`. It is
+  not code-signed yet, so SmartScreen asks first: More info → Run anyway.
+- **Linux** (BlueZ): the `.deb`, or the `.tar.gz` for other distributions.
+  Not tested on real hardware yet.
+
+After that it updates itself: it checks GitHub once a day, and on demand
+from "Check for Updates…" in its menus.
 
 ## Build and run
 
@@ -44,8 +49,8 @@ it shows a Dock icon while its window is open.
 
 The charger and power bank stream only to a session that presents the
 Anker account ID the devices are bound to (40 characters). The app reads it
-once — imported from the Keychain, pasted, or from a one-time Anker login —
-and keeps it in the Keychain.
+once — pasted, from a one-time Anker login, or on macOS imported from the
+Keychain — and keeps it in the system's secret store.
 
 `-demo` runs on made-up devices; `-demo -shots <dir>` captures every screen
 and quits (`-theme`, `-lang` force a theme or language).
@@ -57,7 +62,7 @@ main.go, mygo.json, locales/   the app, its MyGo packaging, its languages
 internal/ff09      FF09 transport: framing, TLV, AES-GCM, ECDH, request builders
 internal/device    decoded state per family and the decoders, tested against spec/fixtures
 internal/model     the supported models
-internal/ble       CoreBluetooth from pure Go (purego, no cgo)
+internal/ble       Bluetooth LE without cgo: CoreBluetooth, WinRT, BlueZ
 internal/link      one device's session: connect, handshake, re-arm, reconnect, covers
 internal/cover     the local cover library
 internal/cloud     optional Anker login, to learn the account ID

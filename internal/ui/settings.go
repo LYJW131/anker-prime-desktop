@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"runtime"
 	"slices"
 	"strings"
 	"time"
@@ -14,7 +15,8 @@ import (
 
 // settingsForm is the Settings page's state between frames.
 type settingsForm struct {
-	// acct is the account card's way in: import, paste or sign in.
+	// acct is the account card's way in, among the tabs shown: import
+	// (macOS only), paste or sign in.
 	acct              int
 	pasteID           string
 	account, password string
@@ -335,7 +337,12 @@ func (a *App) accountCard(c *ui.Context, k *Tokens) {
 				pill(c, k, pillWarn, nil, locales.AcctNotSet())
 			}
 		})
-		segmented(c, k, "acct-way", &f.acct, []string{locales.AcctWayImport(), locales.AcctWayPaste(), locales.AcctWayLogin()}).AlignSelf(ui.Start)
+		// The Telemetry Center keeps the ID in the macOS Keychain only.
+		ways, skip := []string{locales.AcctWayImport(), locales.AcctWayPaste(), locales.AcctWayLogin()}, 0
+		if runtime.GOOS != "darwin" {
+			ways, skip = ways[1:], 1
+		}
+		segmented(c, k, "acct-way", &f.acct, ways).AlignSelf(ui.Start)
 		slow := waited(c, f.busy, f.busyFrom)
 		done := func(ok acctResult) func(error) {
 			return func(err error) {
@@ -353,7 +360,7 @@ func (a *App) accountCard(c *ui.Context, k *Tokens) {
 		}
 		// Each way in takes the same room, so switching moves nothing below.
 		ui.Column(c.Key("acct-body")).Height(76).Gap(8).Justify(ui.Start).Children(func() {
-			switch f.acct {
+			switch f.acct + skip {
 			case 0:
 				ui.Row(c).Gap(10).AlignItems(ui.Center).Children(func() {
 					text := locales.AcctImport()

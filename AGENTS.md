@@ -1,7 +1,7 @@
 # anker-prime-desktop
 
 A desktop app (Go, MyGo native UI) that shows and controls Anker devices over
-Bluetooth, on macOS for now,, plus the Python debugger the protocol was reverse-engineered with.
+Bluetooth, on macOS, Windows and Linux, plus the Python debugger the protocol was reverse-engineered with.
 README.md has the layout; docs/adding-a-device.md the path for a new model.
 
 ## Rules
@@ -20,14 +20,16 @@ README.md has the layout; docs/adding-a-device.md the path for a new model.
   capabilities from the model, never from a model number.
 - Store fields change only on the UI thread. Link goroutines hand results to
   the backend's callbacks, which `Store.Post` them (`internal/backend#newLink`).
-- Nothing touches CoreBluetooth until `ble.NewCentral`: tests never raise the
-  permission prompt. No cgo: `CGO_ENABLED=0` builds everything.
+- Nothing touches the Bluetooth stack (CoreBluetooth, WinRT, BlueZ) until
+  `ble.NewCentral`: tests never raise the permission prompt. No cgo:
+  `CGO_ENABLED=0` builds everything. Code above `internal/ble` is the same on
+  every system; only `internal/ble` has per-system files.
 - User-visible text comes from `locales/` (en is the source; zh-Hans and ja
   must have every key). Run `go tool mygo generate` after editing a catalog
   and commit `locales/catalog_gen.go`. Links and the backend return sentinel
   errors (`internal/link/status.go`, `internal/store`) and notice kinds; the
   views word them.
-- The Anker account ID lives in the Keychain (`mygo.Secrets`, key
+- The Anker account ID lives in the system secret store (`mygo.Secrets`, key
   `anker-user-id`). Never log or print it. `ANKER_USER_ID` overrides it for
   development builds.
 - Logging in to the Anker cloud can sign the phone app out: only on the
@@ -49,6 +51,7 @@ it strands installed apps.
 
 ```bash
 go vet ./... && go test ./...
+GOOS=windows go vet ./... && GOOS=linux go vet ./...
 debugger/.venv/bin/python tools/contract.py verify
 go tool mygo build -skip-dmg
 "build/darwin-arm64/Anker Prime Desktop.app/Contents/MacOS/Anker Prime Desktop" -demo -shots /tmp/anker-shots

@@ -15,7 +15,7 @@ type Settings struct {
 
 // Device is one added device.
 type Device struct {
-	ID        string `json:"id"`         // the CoreBluetooth identifier, stable on this Mac
+	ID        string `json:"id"`         // the ble ID: the CoreBluetooth identifier on macOS, the address elsewhere
 	Model     string `json:"model"`      // a model.ID
 	Name      string `json:"name"`       // advertised name, which is the serial number
 	Nickname  string `json:"nickname"`   // the user's name for it; "" shows the model's name
