@@ -309,6 +309,17 @@ def cmd_covers_upload(args: argparse.Namespace) -> None:
     asyncio.run(_covers_push(args, picture, jpeg))
 
 
+def cmd_covers_push(args: argparse.Namespace) -> None:
+    """Push pixels under a locally chosen id, without the cloud."""
+    from . import image
+
+    jpeg = Path(args.jpeg).read_bytes() if args.raw else image.encode_screensaver_jpeg(args.jpeg, quality=args.quality)
+    hash_code = cloud.parse_hash_code(args.hash) if args.hash else image.jpeg_hash_code(jpeg)
+    picture = cloud.Picture(id=args.id, seq=0, name="", hash_code=hash_code, img_url="", short_url="", raw={})
+    print(f"local push id {args.id} {cloud.format_hash_code(hash_code)} {len(jpeg)} bytes")
+    asyncio.run(_covers_push(args, picture, jpeg))
+
+
 async def _covers_push(args: argparse.Namespace, picture: cloud.Picture, jpeg: bytes) -> None:
     if not args.user_id:
         raise SystemExit("the charger needs an account ID — pass --user-id or log in")
@@ -330,6 +341,7 @@ async def _covers_push(args: argparse.Namespace, picture: cloud.Picture, jpeg: b
         on_frame=on_frame,
         user_id=args.user_id,
         idle_timeout=20.0,
+        record=getattr(args, "record", None),
     )
 
     async def after_handshake(_sess: ble.Session) -> None:
@@ -533,6 +545,24 @@ def build_parser() -> argparse.ArgumentParser:
     covers_upload.add_argument("--wait", type=float, default=60.0)
     covers_upload.add_argument("--seconds", type=float, default=20.0)
     covers_upload.set_defaults(func=cmd_covers_upload, is_async=False)
+
+    covers_push = covers_sub.add_parser("push", help="BLE 0x0220/0x0221: push pixels under a local id, no cloud")
+    covers_push.add_argument(
+        "address",
+        nargs="?",
+        default=os.environ.get("ANKER_CHARGER"),
+        help="BLE address or advertised name ($ANKER_CHARGER)",
+    )
+    covers_push.add_argument("--jpeg", required=True, help="image to crop to 240x240, or a ready JPEG with --raw")
+    covers_push.add_argument("--raw", action="store_true", help="send the file's bytes as they are")
+    covers_push.add_argument("--id", type=int, required=True, help="picture id to store the pixels under")
+    covers_push.add_argument("--hash", help="hash_code to claim (default: CRC32 of the JPEG)")
+    covers_push.add_argument("--quality", type=int, default=85)
+    covers_push.add_argument("--user-id", default=os.environ.get("ANKER_USER_ID"))
+    covers_push.add_argument("--record", help="append the session's frames to this JSONL file")
+    covers_push.add_argument("--wait", type=float, default=60.0)
+    covers_push.add_argument("--seconds", type=float, default=30.0)
+    covers_push.set_defaults(func=cmd_covers_push, is_async=False)
 
     covers_select = covers_sub.add_parser("select", help="BLE 0x021F: show an already-uploaded picture")
     covers_select.add_argument(

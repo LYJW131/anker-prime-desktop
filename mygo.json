@@ -1,0 +1,15 @@
+{
+  "name": "Anker Prime",
+  "slug": "anker-prime",
+  "identifier": "me.lyjw.ankerprime",
+  "version": "0.1.0",
+  "icon": "resources/icon.png",
+  "out": "build",
+  "macos": {
+    "minimumSystemVersion": "13.0",
+    "infoPlist": {
+      "LSUIElement": true,
+      "NSBluetoothAlwaysUsageDescription": "Anker Prime 通过蓝牙读取并控制你的 Anker 充电头和充电宝。"
+    }
+  }
+}
