@@ -1,16 +1,20 @@
-// Package ble is a small CoreBluetooth central for macOS, driven from pure
-// Go through the Objective-C runtime (purego, no cgo).
+// Package ble is a small Bluetooth LE central, without cgo: CoreBluetooth
+// through the Objective-C runtime (purego) on macOS, WinRT through
+// tinygo.org/x/bluetooth on Windows, BlueZ over D-Bus on Linux.
 //
-// Nothing touches CoreBluetooth until NewCentral is called, so importing the
-// package, and testing it, never creates a manager or raises the Bluetooth
-// permission prompt. CoreBluetooth calls the delegates on a private serial
-// queue; every callback copies what it needs into Go values, hands it over
-// without blocking and returns. Scan results and notifications reach the
-// caller in order on a goroutine of their own.
+// Nothing touches the system's Bluetooth stack until NewCentral is called,
+// so importing the package, and testing it, never creates a manager or
+// raises the Bluetooth permission prompt. The stack's callbacks copy what
+// they need into Go values, hand it over without blocking and return. Scan
+// results and notifications reach the caller in order on a goroutine of
+// their own.
 //
-// Characteristic and service UUIDs are strings in any form CoreBluetooth
-// accepts ("FF09", "0000ff09-0000-1000-8000-00805f9b34fb", any case); the
-// package reports them lowercase in the full 128-bit form.
+// A peripheral's ID is its CoreBluetooth identifier on macOS and its
+// address ("AA:BB:CC:DD:EE:FF") on Windows and Linux.
+//
+// Characteristic and service UUIDs are strings in any form
+// ("FF09", "0000ff09-0000-1000-8000-00805f9b34fb", any case); the package
+// reports them lowercase in the full 128-bit form.
 //
 // On other systems every call returns errors.ErrUnsupported.
 package ble
@@ -83,7 +87,7 @@ func (a Authorization) String() string {
 
 // Advert is one advertisement seen while scanning.
 type Advert struct {
-	ID               string            // CoreBluetooth identifier, stable per Mac
+	ID               string            // CoreBluetooth identifier, stable per Mac; the address elsewhere
 	Name             string            // peripheral name, else the advertised local name
 	RSSI             int               // dBm; 127 when unavailable
 	Connectable      bool              // advertised as connectable

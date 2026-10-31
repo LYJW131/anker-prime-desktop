@@ -2,7 +2,8 @@
 // device: it lists FF09 advertisements, or connects to one by name, sends the
 // first handshake step under the fixed initial key and prints the reply.
 //
-// It needs Bluetooth permission: run it from a terminal app that has it.
+// On macOS it needs Bluetooth permission: run it from a terminal app that
+// has it.
 package main
 
 import (
@@ -43,7 +44,7 @@ var (
 func main() {
 	scan := flag.Bool("scan", false, "list FF09 advertisements for -seconds")
 	connect := flag.String("connect", "", "connect to the peripheral advertising this name and send handshake step 0x0001")
-	ident := flag.String("id", "", "like -connect, by CoreBluetooth identifier without scanning (retrievePeripheralsWithIdentifiers:)")
+	ident := flag.String("id", "", "like -connect, by ID without scanning (a CoreBluetooth identifier on macOS, the address elsewhere)")
 	seconds := flag.Int("seconds", 10, "scan duration for -scan")
 	flag.Parse()
 	if *ident != "" && *connect != "" || *scan == (*connect != "" || *ident != "") {

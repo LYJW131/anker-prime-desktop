@@ -18,8 +18,7 @@ yet. [docs/adding-a-device.md](docs/adding-a-device.md) is the path from such
 a device to a supported model.
 
 The app speaks English, Simplified Chinese and Japanese. It runs on macOS
-13 and later; the UI is MyGo's and builds for Windows and Linux too, which
-still need a Bluetooth backend (`internal/ble` drives CoreBluetooth only).
+13 and later, Windows 10 and later, and Linux with BlueZ.
 
 ## Install
 
@@ -57,7 +56,7 @@ main.go, mygo.json, locales/   the app, its MyGo packaging, its languages
 internal/ff09      FF09 transport: framing, TLV, AES-GCM, ECDH, request builders
 internal/device    decoded state per family and the decoders, tested against spec/fixtures
 internal/model     the supported models
-internal/ble       CoreBluetooth from pure Go (purego, no cgo)
+internal/ble       Bluetooth LE without cgo: CoreBluetooth, WinRT, BlueZ
 internal/link      one device's session: connect, handshake, re-arm, reconnect, covers
 internal/cover     the local cover library
 internal/cloud     optional Anker login, to learn the account ID

@@ -3,8 +3,8 @@
 // and can push a cover to a charger. A development tool for checking a
 // model against the real device (docs/adding-a-device.md).
 //
-// Run it from a terminal with Bluetooth access; CoreBluetooth aborts a
-// process without it. The account ID comes from $ANKER_USER_ID.
+// On macOS run it from a terminal with Bluetooth access; CoreBluetooth
+// aborts a process without it. The account ID comes from $ANKER_USER_ID.
 package main
 
 import (
@@ -25,7 +25,7 @@ import (
 )
 
 func main() {
-	id := flag.String("id", "", "CoreBluetooth identifier of the device (from the add-device list or bleprobe -scan)")
+	id := flag.String("id", "", "the device's ID (from the add-device list or bleprobe -scan): a CoreBluetooth identifier on macOS, the address elsewhere")
 	modelID := flag.String("model", "", "model number, e.g. A2687")
 	seconds := flag.Duration("for", 20*time.Second, "how long to stay connected")
 	coverPath := flag.String("cover", "", "an image to push to the charger as cover -cover-id")
@@ -34,7 +34,7 @@ func main() {
 
 	m, ok := model.ByID(model.ID(*modelID))
 	if *id == "" || !ok {
-		fmt.Fprintln(os.Stderr, "usage: linkprobe -id <uuid> -model <A2687|A110G> [-for 20s] [-cover img -cover-id 1003]")
+		fmt.Fprintln(os.Stderr, "usage: linkprobe -id <id> -model <A2687|A110G> [-for 20s] [-cover img -cover-id 1003]")
 		os.Exit(2)
 	}
 	log := slog.New(slog.NewTextHandler(os.Stderr, nil))
