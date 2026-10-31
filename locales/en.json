@@ -840,6 +840,10 @@
   "@noticeCoverRemoveFailed": {
     "description": "A toast."
   },
+  "noticeCoverRenameFailed": "Couldn't rename the picture",
+  "@noticeCoverRenameFailed": {
+    "description": "A toast."
+  },
   "noticeBluetooth": "Bluetooth isn't available",
   "@noticeBluetooth": {
     "description": "A toast."

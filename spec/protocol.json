@@ -48,7 +48,8 @@
     "pause_chunk": 40,
     "pause_after_chunks": 400,
     "reply_timeout": 6000,
-    "chunk_ack_timeout": 5000
+    "chunk_ack_timeout": 5000,
+    "last_ack_timeout": 10000
   },
   "vectors": {
     "account_id": "0123456789abcdef0123456789abcdef01234567",

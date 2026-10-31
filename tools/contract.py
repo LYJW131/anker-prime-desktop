@@ -62,6 +62,9 @@ TIMING_MS = {
     "pause_after_chunks": 400,
     "reply_timeout": 6000,
     "chunk_ack_timeout": 5000,
+    # The last chunk's ack follows the flash write: 3.6 s for 8.6 KB seen
+    # from the Go app (2026-11-01). The Python tool still waits 5 s.
+    "last_ack_timeout": 10000,
 }
 
 # Fixed inputs for the request vectors. The account id and public key are

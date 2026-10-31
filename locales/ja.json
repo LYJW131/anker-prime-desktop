@@ -186,6 +186,7 @@
   "noticeCoverAdded": "「{name}」を追加しました",
   "noticeCoverAddFailed": "画像を追加できませんでした",
   "noticeCoverRemoveFailed": "画像を削除できませんでした",
+  "noticeCoverRenameFailed": "画像の名前を変更できませんでした",
   "noticeBluetooth": "Bluetooth を使用できません",
   "noticeLibrary": "カバーライブラリを使用できません",
   "noticeSettings": "設定を保存できませんでした",

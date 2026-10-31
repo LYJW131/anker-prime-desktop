@@ -70,6 +70,8 @@ func NoticeText(n *store.Notice) string {
 		what = locales.NoticeCoverAddFailed()
 	case store.NoticeCoverRemoveFailed:
 		what = locales.NoticeCoverRemoveFailed()
+	case store.NoticeCoverRenameFailed:
+		what = locales.NoticeCoverRenameFailed()
 	case store.NoticeBluetoothUnavailable:
 		what = locales.NoticeBluetooth()
 	case store.NoticeLibraryUnavailable:

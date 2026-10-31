@@ -133,7 +133,7 @@ func CoverSteps(jpeg []byte, id, hash, epoch uint32, selectFirst bool) ([]Step, 
 			s.ExpectReply, s.Timeout, s.Pause = true, ChunkAckTimeout, 0
 		}
 		if i == len(chunks)-1 {
-			s.Pause = PauseAfterChunks
+			s.Pause, s.Timeout = PauseAfterChunks, LastAckTimeout
 		}
 		steps = append(steps, s)
 	}

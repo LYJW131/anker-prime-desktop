@@ -186,6 +186,7 @@
   "noticeCoverAdded": "已添加「{name}」",
   "noticeCoverAddFailed": "无法添加这张图片",
   "noticeCoverRemoveFailed": "无法移除这张图片",
+  "noticeCoverRenameFailed": "无法给这张图片改名",
   "noticeBluetooth": "蓝牙不可用",
   "noticeLibrary": "封面图库不可用",
   "noticeSettings": "设置没有保存",

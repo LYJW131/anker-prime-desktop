@@ -110,7 +110,7 @@ func TestCoverSteps(t *testing.T) {
 		switch {
 		case i == 24:
 			eq(t, "last pause", s.Pause, 400*time.Millisecond)
-			eq(t, "last timeout", s.ReplyWait(), 5*time.Second)
+			eq(t, "last timeout", s.ReplyWait(), 10*time.Second)
 		case wantAck:
 			eq(t, "acked pause", s.Pause, time.Duration(0))
 			eq(t, "acked timeout", s.ReplyWait(), 5*time.Second)

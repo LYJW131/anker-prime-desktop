@@ -70,7 +70,7 @@ func TestConstantsMatchSpec(t *testing.T) {
 		"pause_status": ms(PauseStatus), "pause_select": ms(PauseSelect),
 		"pause_transfer": ms(PauseTransfer), "pause_chunk": ms(PauseChunk),
 		"pause_after_chunks": ms(PauseAfterChunks), "reply_timeout": ms(ReplyTimeout),
-		"chunk_ack_timeout": ms(ChunkAckTimeout),
+		"chunk_ack_timeout": ms(ChunkAckTimeout), "last_ack_timeout": ms(LastAckTimeout),
 	}
 	for name, want := range s.TimingMS {
 		if got, ok := timing[name]; !ok || got != want {

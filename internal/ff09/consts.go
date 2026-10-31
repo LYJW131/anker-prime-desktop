@@ -106,6 +106,7 @@ const (
 	PauseAfterChunks = 400 * time.Millisecond // after the last chunk
 	ReplyTimeout     = 6 * time.Second        // default wait for a reply
 	ChunkAckTimeout  = 5 * time.Second        // wait for an acked chunk
+	LastAckTimeout   = 10 * time.Second       // wait for the last chunk's ack: the charger writes flash first (3.6 s seen for 8.6 KB)
 )
 
 func mustHex(s string) []byte {

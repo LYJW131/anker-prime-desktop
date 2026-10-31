@@ -111,6 +111,7 @@ const (
 	NoticeCoverAdded                             // Subject joined the library
 	NoticeCoverAddFailed                         // Err says why
 	NoticeCoverRemoveFailed                      // Err says why
+	NoticeCoverRenameFailed                      // Err says why
 	NoticeBluetoothUnavailable                   // Err says why
 	NoticeLibraryUnavailable                     // Err says why
 	NoticeSettingsNotSaved                       // Err says why

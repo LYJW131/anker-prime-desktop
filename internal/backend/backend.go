@@ -407,7 +407,7 @@ func (b *Backend) RenameCover(id int, name string) {
 		return
 	}
 	if err := b.lib.Rename(id, name); err != nil {
-		b.s.Note(store.NoticeCoverRemoveFailed, "", err)
+		b.s.Note(store.NoticeCoverRenameFailed, "", err)
 		return
 	}
 	b.s.Covers = b.lib.List()

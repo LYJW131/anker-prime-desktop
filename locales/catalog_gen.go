@@ -2646,6 +2646,20 @@ func (msgs Messages) NoticeCoverRemoveFailed() string {
 	return Catalog.Format(msgs.locale, "noticeCoverRemoveFailed", nil)
 }
 
+// NoticeCoverRenameFailed says "Couldn't rename the picture"
+// in the language the app shows.
+//
+// A toast.
+func NoticeCoverRenameFailed() string { return In(i18n.Locale()).NoticeCoverRenameFailed() }
+
+// NoticeCoverRenameFailed says "Couldn't rename the picture"
+// in the language of msgs.
+//
+// A toast.
+func (msgs Messages) NoticeCoverRenameFailed() string {
+	return Catalog.Format(msgs.locale, "noticeCoverRenameFailed", nil)
+}
+
 // NoticeBluetooth says "Bluetooth isn't available"
 // in the language the app shows.
 //
