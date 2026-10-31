@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.0.1
+
+- Windows: saving settings while a device is connecting no longer drops
+  that device's connection a moment later.
+- Windows: without a Bluetooth adapter the app shows Bluetooth as off and
+  picks one up when it appears; scans always stop.
+- Linux: with no secret store the account ID is kept for the session, and
+  Settings says so. The `.deb` now depends on `libsecret-1-0`.
+- Windows and Linux: Settings no longer offers the macOS Keychain import or
+  the Dock option.
+- Faster, bounded Bluetooth calls on Linux, so a stuck BlueZ cannot hang a
+  device.
+
 ## 1.0.0
 
 The first release, for macOS, Windows and Linux.
