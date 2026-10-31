@@ -30,7 +30,10 @@ Get it from [Releases](https://github.com/LYJW131/anker-prime-desktop/releases):
 - **Windows 10+**: `anker-prime-desktop-setup-<version>-<arch>.exe`. It is
   not code-signed yet, so SmartScreen asks first: More info → Run anyway.
 - **Linux** (BlueZ): the `.deb`, or the `.tar.gz` for other distributions.
-  Not tested on real hardware yet.
+  Not tested on real hardware yet. The Anker account ID is kept through
+  libsecret, so it needs a Secret Service on the session bus (GNOME Keyring,
+  KWallet or KeePassXC); without one the app keeps the ID only for the
+  session. The `.deb` depends on `libsecret-1-0`.
 
 After that it updates itself: it checks GitHub once a day, and on demand
 from "Check for Updates…" in its menus.

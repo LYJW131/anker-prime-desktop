@@ -123,4 +123,7 @@ const (
 var (
 	ErrUserIDFormat   = errors.New("the account ID must be 40 letters and digits")
 	ErrImportNotFound = errors.New("no account ID in the telemetry app's Keychain item")
+	// ErrSessionOnly says the ID is in use but the system has no secret
+	// store to keep it in.
+	ErrSessionOnly = errors.New("the account ID is kept for this session only: no secret store")
 )

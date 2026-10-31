@@ -2,6 +2,7 @@ package app
 
 import (
 	"runtime"
+	"slices"
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/plugins/updater"
@@ -28,9 +29,9 @@ func (a *App) syncMenu() {
 	}
 	toggle := func(*mygo.MenuItem, *mygo.Window) { a.post(a.view.ToggleSidebar) }
 	mygo.App.SetMenu(mygo.NewMenu([]*mygo.MenuItem{
-		{Label: locales.AppName(), Submenu: []*mygo.MenuItem{
+		{Label: locales.AppName(), Submenu: slices.Concat([]*mygo.MenuItem{
 			{Role: mygo.RoleAbout},
-			updater.MenuItem(),
+		}, a.updates(), []*mygo.MenuItem{
 			mygo.Separator(),
 			{Label: locales.TraySettings(), Accelerator: "Cmd+,", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.post(a.view.GoSettings)
@@ -42,7 +43,7 @@ func (a *App) syncMenu() {
 			{Role: mygo.RoleUnhide},
 			mygo.Separator(),
 			{Role: mygo.RoleQuit},
-		}},
+		})},
 		{Role: mygo.RoleEditMenu},
 		{Label: locales.MenuView(), Submenu: []*mygo.MenuItem{
 			{Label: label, Accelerator: "Ctrl+Cmd+S", Click: toggle},
@@ -51,4 +52,13 @@ func (a *App) syncMenu() {
 		}},
 		{Role: mygo.RoleWindowMenu},
 	}))
+}
+
+// updates is "Check for Updates…", left out of screenshots, which run
+// without the updater.
+func (a *App) updates() []*mygo.MenuItem {
+	if a.opts.Shots != "" {
+		return nil
+	}
+	return []*mygo.MenuItem{updater.MenuItem()}
 }

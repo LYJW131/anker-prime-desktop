@@ -4,10 +4,12 @@ package backend
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"slices"
 	"strings"
 	"sync"
@@ -272,8 +274,12 @@ func (b *Backend) storeUserID(id string) error {
 			return store.ErrUserIDFormat
 		}
 	}
-	if err := mygo.Secrets.Set(userIDKey, []byte(id)); err != nil {
+	err := mygo.Secrets.Set(userIDKey, []byte(id))
+	if err != nil && !errors.Is(err, errors.ErrUnsupported) {
 		return err
+	}
+	if err != nil {
+		err = store.ErrSessionOnly
 	}
 	b.mu.Lock()
 	b.userID = id
@@ -284,12 +290,16 @@ func (b *Backend) storeUserID(id string) error {
 			r.link.Wake()
 		}
 	})
-	return nil
+	return err
 }
 
 // ImportUserID copies the account ID from the telemetry app's Keychain
 // item. macOS may ask once whether this app may read it.
 func (b *Backend) ImportUserID(done func(error)) {
+	if runtime.GOOS != "darwin" {
+		b.s.Post(func() { done(store.ErrImportNotFound) })
+		return
+	}
 	go func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
 		defer cancel()

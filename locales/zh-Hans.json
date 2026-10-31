@@ -181,6 +181,7 @@
   "errTimeout": "超时",
   "errUserIDFormat": "账号 ID 应为 40 位字母和数字",
   "errImportNotFound": "遥测中心的钥匙串条目里没有账号 ID",
+  "errSessionOnly": "仅本次运行有效：系统没有可用的密钥存储",
   "noticeCoverShown": "已切换为「{name}」",
   "noticeCoverFailed": "封面没有切换",
   "noticeCoverAdded": "已添加「{name}」",

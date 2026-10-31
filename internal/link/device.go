@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"strings"
 	"sync"
 	"time"
 
@@ -258,7 +259,7 @@ func (d *Device) connectOnce(ctx context.Context, changed <-chan struct{}, want 
 func (d *Device) find(ctx context.Context, id string) error {
 	found := make(chan struct{}, 1)
 	stop, err := d.cfg.Scanner.Listen(func(a ble.Advert) {
-		if a.ID == id {
+		if strings.EqualFold(a.ID, id) {
 			select {
 			case found <- struct{}{}:
 			default:

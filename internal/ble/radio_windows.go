@@ -6,6 +6,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"reflect"
 	"runtime"
 	"strings"
 	"sync"
@@ -24,6 +25,22 @@ import (
 // connectAttempt bounds one WinRT connection attempt; Connect retries
 // until its context ends, as CoreBluetooth waits.
 const connectAttempt = 15 * time.Second
+
+// openWait bounds how long open holds its caller; a slower stack reports
+// its state when it answers.
+const openWait = 5 * time.Second
+
+// adapterRetry is the pause before looking for a Bluetooth adapter again.
+const adapterRetry = 3 * time.Second
+
+var (
+	// errNoAdapter is watch's report that the system has no Bluetooth
+	// adapter.
+	errNoAdapter = errors.New("ble: no bluetooth adapter")
+	// errScanStuck is scan's report that the stack kept scanning past
+	// disconnectTimeout after the stop.
+	errScanStuck = errors.New("ble: scan did not stop")
+)
 
 // winRadio drives WinRT through tinygo's bluetooth package, plus the
 // adapter's radio for the state.
@@ -49,37 +66,63 @@ func newRadio() radio {
 // thread: the WinRT work happens on a goroutine parked on a thread of the
 // multithreaded apartment until close. While that thread exists every
 // other thread of the process may call WinRT, and callbacks run on the
-// apartment's thread pool.
+// apartment's thread pool. Without an adapter the radio reports powered
+// off and looks again every adapterRetry.
 func (r *winRadio) open(set func(State)) error {
 	ready := make(chan error, 1)
 	go func() {
 		runtime.LockOSThread()
 		defer runtime.UnlockOSThread()
 		defer close(r.closed)
+		reply := func(err error) {
+			select {
+			case ready <- err:
+			default:
+			}
+		}
 		err := ole.RoInitialize(1) // RO_INIT_MULTITHREADED
 		var oe *ole.OleError
 		if errors.As(err, &oe) && oe.Code() == 1 { // S_FALSE: already initialized
 			err = nil
 		}
 		if err != nil {
-			ready <- fmt.Errorf("ble: windows runtime: %w", err)
+			set(StateUnsupported)
+			reply(fmt.Errorf("ble: windows runtime: %w", err))
 			return
 		}
 		defer ole.CoUninitialize()
-		if err := r.watch(set); err != nil {
-			ready <- err
-			return
+		r.adapter.SetConnectHandler(r.connectionChanged)
+		for {
+			err := r.watch(set)
+			if err != nil && !errors.Is(err, errNoAdapter) {
+				set(StateUnsupported)
+				reply(err)
+				return
+			}
+			reply(nil)
+			if err == nil {
+				break
+			}
+			select {
+			case <-r.quit:
+				return
+			case <-time.After(adapterRetry):
+			}
 		}
-		ready <- nil
 		<-r.quit
 		r.unwatch()
 	}()
-	return <-ready
+	select {
+	case err := <-ready:
+		return err
+	case <-time.After(openWait):
+		return nil
+	}
 }
 
-// watch reports the adapter's radio state now and on every change.
+// watch reports the adapter's radio state now and on every change, or
+// returns errNoAdapter when the system has none.
 func (r *winRadio) watch(set func(State)) error {
-	r.adapter.SetConnectHandler(r.connectionChanged)
 	op, err := btadapter.BluetoothAdapterGetDefaultAsync()
 	if err != nil {
 		return fmt.Errorf("ble: bluetooth adapter: %w", err)
@@ -89,8 +132,8 @@ func (r *winRadio) watch(set func(State)) error {
 		return fmt.Errorf("ble: bluetooth adapter: %w", err)
 	}
 	if res == nil {
-		set(StateUnsupported) // no adapter
-		return nil
+		set(StatePoweredOff)
+		return errNoAdapter
 	}
 	ad := (*btadapter.BluetoothAdapter)(res)
 	defer ad.Release()
@@ -174,18 +217,39 @@ func await(op *foundation.IAsyncOperation, resultSignature string) (unsafe.Point
 	return op.GetResults()
 }
 
-// connectionChanged runs on a WinRT thread.
+// connectionChanged runs on a WinRT thread, or on the goroutine that
+// disconnects d.
 func (r *winRadio) connectionChanged(d bluetooth.Device, connected bool) {
 	if connected {
 		return
 	}
 	r.mu.Lock()
 	c := r.conns[d.Address.MAC]
-	delete(r.conns, d.Address.MAC)
+	if c != nil && !sameDevice(c.d, d) {
+		c = nil
+	}
+	if c != nil {
+		delete(r.conns, d.Address.MAC)
+	}
 	r.mu.Unlock()
 	if c != nil {
 		c.lost(nil)
 	}
+}
+
+// sameDevice reports whether a and b come from one Connect. tinygo's Device
+// has no identity but its link state; when that cannot be read the MAC
+// decides.
+func sameDevice(a, b bluetooth.Device) bool {
+	la, lb := linkOf(a), linkOf(b)
+	return la == 0 || lb == 0 || la == lb
+}
+
+func linkOf(d bluetooth.Device) uintptr {
+	if f := reflect.ValueOf(d).FieldByName("link"); f.Kind() == reflect.Pointer {
+		return f.Pointer()
+	}
+	return 0
 }
 
 func (r *winRadio) scan(stop <-chan struct{}, report func(Advert)) error {
@@ -200,15 +264,34 @@ func (r *winRadio) scan(stop <-chan struct{}, report func(Advert)) error {
 		return err
 	case <-stop:
 	}
-	// StopScan fails until Scan has created its watcher.
-	for r.adapter.StopScan() != nil {
+	// StopScan fails until Scan has created its watcher, and a Stop that
+	// lands before the watcher starts is lost: repeat it until Scan returns.
+	err := r.stopScan(done, disconnectTimeout)
+	if errors.Is(err, errScanStuck) {
+		go r.stopScan(done, 0)
+	}
+	return err
+}
+
+// stopScan calls StopScan until done receives, or returns errScanStuck
+// after limit unless it is 0.
+func (r *winRadio) stopScan(done <-chan error, limit time.Duration) error {
+	var expired <-chan time.Time
+	if limit > 0 {
+		expired = time.After(limit)
+	}
+	tick := time.NewTicker(20 * time.Millisecond)
+	defer tick.Stop()
+	for {
+		_ = r.adapter.StopScan()
 		select {
 		case err := <-done:
 			return err
-		case <-time.After(20 * time.Millisecond):
+		case <-tick.C:
+		case <-expired:
+			return errScanStuck
 		}
 	}
-	return <-done
 }
 
 func advertOf(res bluetooth.ScanResult) Advert {
@@ -250,11 +333,11 @@ func (r *winRadio) connect(ctx context.Context, addr [6]byte, lost func(error)) 
 		select {
 		case x = <-res:
 		case <-ctx.Done():
-			go func() {
-				if x := <-res; x.err == nil {
-					_ = x.d.Disconnect()
-				}
-			}()
+			// Unwind before returning: a later Disconnect reports to the
+			// adapter-wide handler while a newer attempt may hold the MAC.
+			if x = <-res; x.err == nil {
+				_ = x.d.Disconnect()
+			}
 			return nil, ctx.Err()
 		}
 		switch {

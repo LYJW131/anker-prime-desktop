@@ -2,9 +2,9 @@ package app
 
 import (
 	"math"
+	"slices"
 
 	"github.com/egoist/mygo"
-	"github.com/egoist/mygo/plugins/updater"
 
 	appui "github.com/LYJW131/anker-prime-desktop/internal/ui"
 	"github.com/LYJW131/anker-prime-desktop/locales"
@@ -42,16 +42,16 @@ func newTray(a *App) *trayItem {
 	it.t = t
 	// The menu is made on each click, in the language of the moment.
 	menu := func() *mygo.Menu {
-		return mygo.NewMenu([]*mygo.MenuItem{
+		return mygo.NewMenu(slices.Concat([]*mygo.MenuItem{
 			{Label: locales.TrayOpen(), Click: func(*mygo.MenuItem, *mygo.Window) { a.ShowWindow() }},
 			{Label: locales.TraySettings(), Accelerator: "Cmd+,", Click: func(*mygo.MenuItem, *mygo.Window) {
 				a.view.GoSettings()
 				a.ShowWindow()
 			}},
-			updater.MenuItem(),
+		}, a.updates(), []*mygo.MenuItem{
 			mygo.Separator(),
 			{Label: locales.TrayQuit(), Accelerator: "Cmd+Q", Click: func(*mygo.MenuItem, *mygo.Window) { a.Quit() }},
-		})
+		}))
 	}
 	// A tray with a menu sends clicks to the menu, so the menu is set only
 	// for the right click's popup and the left click opens the panel.

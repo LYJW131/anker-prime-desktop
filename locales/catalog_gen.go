@@ -2576,6 +2576,20 @@ func (msgs Messages) ErrImportNotFound() string {
 	return Catalog.Format(msgs.locale, "errImportNotFound", nil)
 }
 
+// ErrSessionOnly says "Kept for this session only: no secret store available"
+// in the language the app shows.
+//
+// An error, as a status line or a toast's reason.
+func ErrSessionOnly() string { return In(i18n.Locale()).ErrSessionOnly() }
+
+// ErrSessionOnly says "Kept for this session only: no secret store available"
+// in the language of msgs.
+//
+// An error, as a status line or a toast's reason.
+func (msgs Messages) ErrSessionOnly() string {
+	return Catalog.Format(msgs.locale, "errSessionOnly", nil)
+}
+
 // NoticeCoverShown says "Showing “{name}”"
 // in the language the app shows.
 //

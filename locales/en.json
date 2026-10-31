@@ -808,6 +808,10 @@
   "@errImportNotFound": {
     "description": "An error, as a status line or a toast's reason."
   },
+  "errSessionOnly": "Kept for this session only: no secret store available",
+  "@errSessionOnly": {
+    "description": "An error, as a status line or a toast's reason."
+  },
   "noticeCoverShown": "Showing “{name}”",
   "@noticeCoverShown": {
     "description": "A toast.",

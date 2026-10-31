@@ -1,6 +1,7 @@
 GO ?= go
 SHOTS ?= build/shots
-APP = build/darwin-$(shell $(GO) env GOARCH)/Anker Prime Desktop.app
+BIN = Anker Prime Desktop
+APP = build/darwin-$(shell $(GO) env GOARCH)/$(BIN).app
 
 .PHONY: build app run demo test vet shots
 
@@ -15,7 +16,7 @@ run:
 	$(GO) tool mygo dev
 
 demo: app
-	"$(APP)/Contents/MacOS/Anker Prime" -demo
+	"$(APP)/Contents/MacOS/$(BIN)" -demo
 
 test:
 	$(GO) test ./...
@@ -26,5 +27,5 @@ vet:
 # Every screen, light and dark, wide and narrow, and the menu bar panel, in
 # Chinese; the main pages again in English and Japanese, for how they fit.
 shots: app
-	"$(APP)/Contents/MacOS/Anker Prime" -demo -lang zh-Hans -shots "$(abspath $(SHOTS))"
-	for l in en ja; do "$(APP)/Contents/MacOS/Anker Prime" -demo -lang $$l -shots "$(abspath $(SHOTS))/$$l"; done
+	"$(APP)/Contents/MacOS/$(BIN)" -demo -lang zh-Hans -shots "$(abspath $(SHOTS))"
+	for l in en ja; do "$(APP)/Contents/MacOS/$(BIN)" -demo -lang $$l -shots "$(abspath $(SHOTS))/$$l"; done

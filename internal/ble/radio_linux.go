@@ -25,6 +25,12 @@ const (
 	ifObjects    = "org.freedesktop.DBus.ObjectManager"
 )
 
+// openTimeout bounds open's wait for bluetoothd's object snapshot.
+const openTimeout = 5 * time.Second
+
+// mtuTimeout bounds mtu's property reads.
+const mtuTimeout = 2 * time.Second
+
 // bluezRadio talks to BlueZ over its own system bus connection, whose
 // signals arrive in order on one goroutine (dbus's default handler may
 // reorder them, which would break frames that span notifications).
@@ -66,18 +72,20 @@ func (r *bluezRadio) open(set func(State)) error {
 		}
 	}
 	signals := make(chan *dbus.Signal, 64)
-	bus.Signal(signals)
-	go r.dispatch(signals)
+	bus.Signal(signals) // buffered until dispatch, which starts after the snapshot
 
-	objects, err := r.objects(context.Background())
+	ctx, cancel := context.WithTimeout(context.Background(), openTimeout)
+	objects, err := r.objects(ctx)
+	cancel()
 	if err != nil {
 		var de dbus.Error
 		switch {
 		case errors.As(err, &de) && de.Name == "org.freedesktop.DBus.Error.AccessDenied":
 			set(StateUnauthorized)
 		default:
-			set(StateUnsupported) // bluetoothd is not running
+			set(StateUnsupported) // bluetoothd is not running or not answering
 		}
+		go r.dispatch(signals)
 		return nil
 	}
 	r.mu.Lock()
@@ -94,6 +102,7 @@ func (r *bluezRadio) open(set func(State)) error {
 	}
 	r.mu.Unlock()
 	r.publish()
+	go r.dispatch(signals)
 	return nil
 }
 
@@ -371,7 +380,7 @@ func (r *bluezRadio) connect(ctx context.Context, addr [6]byte, lost func(error)
 		}
 		return fail(err)
 	}
-	if v, err := obj.GetProperty(ifDevice + ".ServicesResolved"); err == nil {
+	if v, err := property(ctx, obj, ifDevice, "ServicesResolved"); err == nil {
 		if ok, _ := v.Value().(bool); ok {
 			c.markResolved()
 		}
@@ -384,6 +393,13 @@ func (r *bluezRadio) connect(ctx context.Context, addr [6]byte, lost func(error)
 	case <-ctx.Done():
 		return fail(ctx.Err())
 	}
+}
+
+// property reads one D-Bus property until ctx ends.
+func property(ctx context.Context, obj dbus.BusObject, iface, name string) (dbus.Variant, error) {
+	var v dbus.Variant
+	err := obj.CallWithContext(ctx, ifProperties+".Get", 0, iface, name).Store(&v)
+	return v, err
 }
 
 func (r *bluezRadio) close() {
@@ -568,12 +584,14 @@ func (c *bluezConn) mtu() int {
 	}
 	c.mu.Unlock()
 	sort.Strings(uuids)
+	ctx, cancel := context.WithTimeout(context.Background(), mtuTimeout)
+	defer cancel()
 	for _, u := range uuids {
 		obj, _, err := c.char(u)
 		if err != nil {
 			continue
 		}
-		if v, err := obj.GetProperty(ifChar + ".MTU"); err == nil {
+		if v, err := property(ctx, obj, ifChar, "MTU"); err == nil {
 			if m, ok := v.Value().(uint16); ok {
 				return int(m)
 			}

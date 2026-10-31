@@ -28,9 +28,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          flags=()
+          case "${GITHUB_REF_NAME%%+*}" in *-*) flags=(--prerelease) ;; esac
           if ! gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
             gh release create "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" \
-              --draft --verify-tag --title "Anker Prime Desktop $GITHUB_REF_NAME" --generate-notes
+              --draft --verify-tag --title "Anker Prime Desktop $GITHUB_REF_NAME" --generate-notes "${flags[@]}"
           fi
 
   build:
@@ -39,6 +41,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
+      max-parallel: 1
       matrix:
         include:
           - { name: macOS, os: macos-latest, platform: "darwin/arm64,darwin/amd64" }
@@ -62,7 +65,28 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Every asset has a line in SHA256SUMS
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          dir="$(mktemp -d)"
+          gh release download "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --pattern SHA256SUMS --dir "$dir"
+          listed="$(sed -E 's/^[0-9a-f]{64} [ *]//; s/ /./g' "$dir/SHA256SUMS")"
+          assets="$(gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name')"
+          [ -n "$assets" ] || { echo "the release has no assets" >&2; exit 1; }
+          missing=0
+          while IFS= read -r name; do
+            case "$name" in SHA256SUMS | update-*.json) continue ;; esac
+            if ! printf '%s\n' "$listed" | grep -Fxq -- "$name"; then
+              echo "SHA256SUMS lacks $name" >&2
+              missing=1
+            fi
+          done <<< "$assets"
+          exit "$missing"
       - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false --latest
+        run: |
+          flags=(--latest)
+          case "${GITHUB_REF_NAME%%+*}" in *-*) flags=(--prerelease --latest=false) ;; esac
+          gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --draft=false "${flags[@]}"

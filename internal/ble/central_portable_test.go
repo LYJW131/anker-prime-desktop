@@ -14,6 +14,7 @@ type fakeRadio struct {
 	set     func(State)
 	adverts []Advert
 	block   chan struct{} // connect waits on it when set
+	mtuGate chan struct{} // conn.mtu waits on it when set
 
 	mu   sync.Mutex
 	last *fakeConn
@@ -37,7 +38,7 @@ func (r *fakeRadio) connect(ctx context.Context, addr [6]byte, lost func(error))
 			return nil, ctx.Err()
 		}
 	}
-	c := &fakeConn{lost: lost}
+	c := &fakeConn{lost: lost, mtuGate: r.mtuGate}
 	r.mu.Lock()
 	r.last = c
 	r.mu.Unlock()
@@ -47,11 +48,12 @@ func (r *fakeRadio) connect(ctx context.Context, addr [6]byte, lost func(error))
 func (r *fakeRadio) close() {}
 
 type fakeConn struct {
-	lost   func(error)
-	mu     sync.Mutex
-	notify func([]byte)
-	writes [][]byte
-	closed bool
+	lost    func(error)
+	mtuGate chan struct{}
+	mu      sync.Mutex
+	notify  func([]byte)
+	writes  [][]byte
+	closed  bool
 }
 
 func (c *fakeConn) services(context.Context) ([]string, error) {
@@ -81,7 +83,12 @@ func (c *fakeConn) write(_ context.Context, _ string, data []byte, _ bool) error
 	return nil
 }
 
-func (c *fakeConn) mtu() int { return 247 }
+func (c *fakeConn) mtu() int {
+	if c.mtuGate != nil {
+		<-c.mtuGate
+	}
+	return 247
+}
 
 func (c *fakeConn) close() {
 	c.mu.Lock()
@@ -205,8 +212,14 @@ func TestSessionNotificationsInOrder(t *testing.T) {
 		t.Fatalf("reconnect: %v", err)
 	}
 	p2.Disconnect()
-	if !errors.Is(p2.Err(), ErrClosed) || !r.last.closed {
-		t.Fatalf("after Disconnect: %v closed=%v", p2.Err(), r.last.closed)
+	r.mu.Lock()
+	last := r.last
+	r.mu.Unlock()
+	last.mu.Lock()
+	closed := last.closed
+	last.mu.Unlock()
+	if !errors.Is(p2.Err(), ErrClosed) || !closed {
+		t.Fatalf("after Disconnect: %v closed=%v", p2.Err(), closed)
 	}
 }
 
@@ -234,5 +247,65 @@ func TestConnectCancelAndPowerOff(t *testing.T) {
 	}
 	if _, err := c.Connect(context.Background(), "not-an-address"); !errors.Is(err, ErrUnknownPeripheral) {
 		t.Fatalf("bad id: %v", err)
+	}
+}
+
+func TestWriteHonoursContextWhileMTUStalls(t *testing.T) {
+	r := &fakeRadio{mtuGate: make(chan struct{})}
+	c := newFakeCentral(t, r)
+	ctx := context.Background()
+	p, err := c.Connect(ctx, "AA:BB:CC:DD:EE:FF")
+	if err != nil {
+		t.Fatal(err)
+	}
+	svcs, err := p.DiscoverServices(ctx, "8c850001-0302-41c5-b46e-cf057c562025")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := p.DiscoverCharacteristics(ctx, svcs[0]); err != nil {
+		t.Fatal(err)
+	}
+	wctx, cancel := context.WithTimeout(ctx, 30*time.Millisecond)
+	defer cancel()
+	res := make(chan error, 1)
+	go func() { res <- p.WriteContext(wctx, "8c850002-0302-41c5-b46e-cf057c562025", []byte{1}, false) }()
+	select {
+	case err := <-res:
+		close(r.mtuGate)
+		if !errors.Is(err, context.DeadlineExceeded) {
+			t.Fatalf("write with a stalled stack: %v", err)
+		}
+	case <-time.After(time.Second):
+		close(r.mtuGate)
+		t.Fatal("write ignored its context while the MTU read stalled")
+	}
+	if err := p.Write("8c850002-0302-41c5-b46e-cf057c562025", make([]byte, 245), false); !errors.Is(err, ErrTooLong) {
+		t.Fatalf("long write: %v", err)
+	}
+}
+
+func TestSetStateWatchersMatchState(t *testing.T) {
+	c := newFakeCentral(t, &fakeRadio{})
+	states, cancel := c.WatchState()
+	defer cancel()
+	for range 2000 {
+		var wg sync.WaitGroup
+		for _, s := range []State{StatePoweredOff, StatePoweredOn} {
+			wg.Add(1)
+			go func() {
+				defer wg.Done()
+				c.setState(s)
+			}()
+		}
+		wg.Wait()
+		var last State
+		select {
+		case last = <-states:
+		default:
+			last = c.State() // neither call changed it
+		}
+		if last != c.State() {
+			t.Fatalf("watcher holds %v, State() is %v", last, c.State())
+		}
 	}
 }

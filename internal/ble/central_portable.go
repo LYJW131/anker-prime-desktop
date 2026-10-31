@@ -15,8 +15,8 @@ import (
 // radio is the system's Bluetooth stack under a Central: WinRT on Windows,
 // BlueZ on Linux. Its callbacks never block.
 type radio interface {
-	// open starts using the stack and reports the radio's state to set,
-	// at once and on every change.
+	// open starts using the stack and reports the radio's state to set on
+	// every change, the first one possibly after open has returned.
 	open(set func(State)) error
 	// scan reports advertisements until stop is closed or the stack stops
 	// scanning by itself, and returns once it has stopped.
@@ -154,12 +154,14 @@ func stateErr(s State) error {
 	return nil
 }
 
-// setState runs on the stack's thread.
+// setState may run on any of the stack's threads; c.mu orders the change
+// and its broadcast.
 func (c *Central) setState(s State) {
+	c.mu.Lock()
 	if State(c.state.Swap(int32(s))) == s {
+		c.mu.Unlock()
 		return
 	}
-	c.mu.Lock()
 	for ch := range c.watchers {
 		select {
 		case <-ch:
@@ -693,7 +695,11 @@ func (p *Peripheral) MaxWriteLen(withoutResponse bool) int {
 	if err != nil {
 		return 0
 	}
-	m := cn.mtu()
+	return writeLimit(cn.mtu(), withoutResponse)
+}
+
+// writeLimit is MaxWriteLen for an ATT MTU of m.
+func writeLimit(m int, withoutResponse bool) int {
 	if m <= 3 {
 		return 0
 	}
@@ -724,11 +730,13 @@ func (p *Peripheral) WriteContext(ctx context.Context, characteristic string, da
 	}
 	p.writeMu.Lock()
 	defer p.writeMu.Unlock()
-	if max := p.MaxWriteLen(!withResponse); max > 0 && len(data) > max {
-		return ErrTooLong
-	}
 	data = bytes.Clone(data)
-	return p.call(ctx, func(cn conn) error { return cn.write(ctx, c.UUID, data, withResponse) })
+	return p.call(ctx, func(cn conn) error {
+		if max := writeLimit(cn.mtu(), !withResponse); max > 0 && len(data) > max {
+			return ErrTooLong
+		}
+		return cn.write(ctx, c.UUID, data, withResponse)
+	})
 }
 
 // Disconnect ends the connection and waits, briefly, for the stack. Err

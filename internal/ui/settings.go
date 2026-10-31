@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"errors"
 	"fmt"
 	"runtime"
 	"slices"
@@ -10,6 +11,7 @@ import (
 	"github.com/egoist/mygo/ui"
 
 	"github.com/LYJW131/anker-prime-desktop/internal/settings"
+	"github.com/LYJW131/anker-prime-desktop/internal/store"
 	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
@@ -347,11 +349,11 @@ func (a *App) accountCard(c *ui.Context, k *Tokens) {
 		done := func(ok acctResult) func(error) {
 			return func(err error) {
 				f.busy = false
-				if err != nil {
+				if err != nil && !errors.Is(err, store.ErrSessionOnly) {
 					f.done, f.failed = acctNone, err
 					return
 				}
-				f.done, f.failed = ok, nil
+				f.done, f.failed = ok, err
 				f.pasteID, f.password = "", ""
 			}
 		}
@@ -411,6 +413,9 @@ func (a *App) accountCard(c *ui.Context, k *Tokens) {
 			switch {
 			case f.failed != nil:
 				text, col = ErrText(f.failed), k.Bad
+				if errors.Is(f.failed, store.ErrSessionOnly) {
+					col = k.Warn
+				}
 			case f.done == acctImported:
 				text = locales.AcctImported()
 			case f.done == acctSaved:
@@ -461,11 +466,13 @@ func (a *App) generalCard(c *ui.Context, k *Tokens) {
 				a.apply(func(n *settings.Settings) { n.Theme = themeNames[sel] })
 			}
 		})
-		optionRow(c, k, "dock", locales.SetDock(), func() {
-			on := st.ShowDock
-			if toggle(c, k, "show-dock", &on, locales.SetDock()).Changed() {
-				a.apply(func(n *settings.Settings) { n.ShowDock = on })
-			}
-		})
+		if runtime.GOOS == "darwin" {
+			optionRow(c, k, "dock", locales.SetDock(), func() {
+				on := st.ShowDock
+				if toggle(c, k, "show-dock", &on, locales.SetDock()).Changed() {
+					a.apply(func(n *settings.Settings) { n.ShowDock = on })
+				}
+			})
+		}
 	})
 }
