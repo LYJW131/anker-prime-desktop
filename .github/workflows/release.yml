@@ -1,7 +1,9 @@
 name: Release
 
 # Push a tag v<version> matching mygo.json's version: every platform builds
-# at once into a draft release, which is published once all have uploaded.
+# at once into a draft release, with the signed update manifests installed
+# apps read, and the release is published once all have uploaded. The
+# notes of the update window come from CHANGELOG.md.
 
 on:
   push:
@@ -50,23 +52,11 @@ jobs:
       - name: Install NSIS, for the Windows installers
         if: matrix.name == 'Windows'
         run: sudo apt-get update && sudo apt-get install -y nsis
-      - name: Build
-        run: go tool mygo build -platform "${{ matrix.platform }}"
-      - name: Upload to the draft
+      - name: Build, sign the updates and upload to the draft
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          version="$(jq -r .version mygo.json)"
-          # The packages carry the version in their names; the bare
-          # executables and install scripts would collide across targets.
-          files=$(find build -maxdepth 2 -type f \( -name "anker-prime-desktop-${version}*" -o -name "anker-prime-desktop_${version}*" \))
-          if [ -z "$files" ]; then
-            echo "no packages under build/" >&2
-            find build -maxdepth 2 -type f >&2
-            exit 1
-          fi
-          echo "$files"
-          echo "$files" | tr '\n' '\0' | xargs -0 gh release upload "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --clobber
+          MYGO_UPDATER_PRIVATE_KEY: ${{ secrets.MYGO_UPDATER_PRIVATE_KEY }}
+        run: go tool mygo build -platform "${{ matrix.platform }}" -upload
 
   publish:
     needs: build

@@ -21,6 +21,15 @@ The app speaks English, Simplified Chinese and Japanese. It runs on macOS
 13 and later; the UI is MyGo's and builds for Windows and Linux too, which
 still need a Bluetooth backend (`internal/ble` drives CoreBluetooth only).
 
+## Install
+
+Download the disk image for your Mac from
+[Releases](https://github.com/LYJW131/anker-prime-desktop/releases). The app
+is not notarized yet, so the first launch needs a right-click → Open (or
+System Settings → Privacy & Security → Open Anyway). After that it updates
+itself: it checks GitHub once a day, and on demand from "Check for
+Updates…" in its menus.
+
 ## Build and run
 
 Needs Go 1.27.3 or later on macOS 13+.

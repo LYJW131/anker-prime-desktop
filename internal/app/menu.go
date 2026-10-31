@@ -4,6 +4,7 @@ import (
 	"runtime"
 
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/plugins/updater"
 
 	"github.com/LYJW131/anker-prime-desktop/locales"
 )
@@ -27,7 +28,21 @@ func (a *App) syncMenu() {
 	}
 	toggle := func(*mygo.MenuItem, *mygo.Window) { a.post(a.view.ToggleSidebar) }
 	mygo.App.SetMenu(mygo.NewMenu([]*mygo.MenuItem{
-		{Role: mygo.RoleAppMenu},
+		{Label: locales.AppName(), Submenu: []*mygo.MenuItem{
+			{Role: mygo.RoleAbout},
+			updater.MenuItem(),
+			mygo.Separator(),
+			{Label: locales.TraySettings(), Accelerator: "Cmd+,", Click: func(*mygo.MenuItem, *mygo.Window) {
+				a.post(a.view.GoSettings)
+				a.ShowWindow()
+			}},
+			mygo.Separator(),
+			{Role: mygo.RoleHide},
+			{Role: mygo.RoleHideOthers},
+			{Role: mygo.RoleUnhide},
+			mygo.Separator(),
+			{Role: mygo.RoleQuit},
+		}},
 		{Role: mygo.RoleEditMenu},
 		{Label: locales.MenuView(), Submenu: []*mygo.MenuItem{
 			{Label: label, Accelerator: "Ctrl+Cmd+S", Click: toggle},

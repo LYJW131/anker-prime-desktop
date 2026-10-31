@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/plugins/updater"
 
 	appui "github.com/LYJW131/anker-prime-desktop/internal/ui"
 	"github.com/LYJW131/anker-prime-desktop/locales"
@@ -47,6 +48,7 @@ func newTray(a *App) *trayItem {
 				a.view.GoSettings()
 				a.ShowWindow()
 			}},
+			updater.MenuItem(),
 			mygo.Separator(),
 			{Label: locales.TrayQuit(), Accelerator: "Cmd+Q", Click: func(*mygo.MenuItem, *mygo.Window) { a.Quit() }},
 		})

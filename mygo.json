@@ -12,6 +12,10 @@
       "NSBluetoothAlwaysUsageDescription": "Anker Prime Desktop uses Bluetooth to read and control your Anker devices."
     }
   },
+  "updates": {
+    "publicKey": "BB1zjxZK6tjmVoMSpS/Pw0pQL0d3TNEvMsPUOTOTCsg=",
+    "github": "LYJW131/anker-prime-desktop"
+  },
   "i18n": {
     "dir": "locales",
     "source": "en"

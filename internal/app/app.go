@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/plugins/updater/native"
 	"github.com/egoist/mygo/ui"
 
 	"github.com/LYJW131/anker-prime-desktop/internal/settings"
@@ -102,6 +103,11 @@ func Run(opts Options) error {
 		}
 	})
 	mygo.App.OnSecondInstance(func([]string, string) { mygo.RunOnMain(a.ShowWindow) })
+	if opts.Shots == "" {
+		// Sparkle's window in native UI: a background check 10 s after
+		// launch and daily, in the language the app shows.
+		mygo.Use(native.Plugin)
+	}
 	mygo.App.WhenReady(a.ready)
 	return mygo.App.Run()
 }

@@ -35,6 +35,16 @@ README.md has the layout; docs/adding-a-device.md the path for a new model.
 - Covers need no cloud: any id below 65536 works, and the charger keeps the
   last four pushed (docs/screensaver.md).
 
+## Release
+
+Bump `version` in `mygo.json`, add its section to `CHANGELOG.md` (the
+update window shows it), commit, then push the tag `v<version>`:
+`.github/workflows/release.yml` builds every platform, signs the updates
+with the `MYGO_UPDATER_PRIVATE_KEY` secret and publishes the release.
+Installed apps update from the latest release. The secret's key also lives
+in `~/Library/Application Support/mygo/update-keys` on lyjw's Mac; losing
+it strands installed apps.
+
 ## Verify
 
 ```bash
