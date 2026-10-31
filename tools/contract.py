@@ -21,9 +21,12 @@ cannot import Python. Two things travel across that boundary instead:
 
 from __future__ import annotations
 
+import contextlib
 import json
 import pathlib
+import struct
 import sys
+from unittest import mock
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "debugger"))
@@ -36,6 +39,103 @@ CAPTURE_DIR = ROOT / "captures"
 SWIFT_OUT = SPEC_DIR / "AnkerPrimeSpec.swift"
 
 PROFILES = {"charger": charger.PROFILE, "powerbank": powerbank.PROFILE}
+
+# --- constants that exist only as literals in the Python -------------------
+#
+# The write-ACK result codes are observed values (docs/screensaver.md, NOTES.md
+# "Wrong turns"), not Python constants. The pauses are the asyncio.sleep
+# literals of session.handshake / arm_telemetry and cover.transfer_pixels.
+RESULT_CODES = {
+    "ok": 0x00,
+    "bad_body": 0x04,
+    "transfer_complete": 0x10,
+    "not_on_device": 0x11,
+    "overflow": 0x12,
+}
+TIMING_MS = {
+    "pause_handshake": 100,
+    "pause_session": 120,
+    "pause_status": 200,
+    "pause_select": 150,
+    "pause_transfer": 200,
+    "pause_chunk": 40,
+    "pause_after_chunks": 400,
+    "reply_timeout": 6000,
+    "chunk_ack_timeout": 5000,
+}
+
+# Fixed inputs for the request vectors. The account id and public key are
+# placeholders, not anybody's real values.
+VECTOR_ACCOUNT_ID = "0123456789abcdef0123456789abcdef01234567"
+VECTOR_PUBLIC_KEY = bytes(range(64))
+
+
+# --- request vectors -------------------------------------------------------
+
+
+@contextlib.contextmanager
+def _fixed_epochs(*values: int):
+    """Make ff09.epoch_bytes() return the given values in turn, then the last."""
+    calls = iter(values)
+
+    def fake(offset_sec: int = 0) -> bytes:
+        return struct.pack("<I", next(calls, values[-1]))
+
+    with mock.patch.object(ff09, "epoch_bytes", fake):
+        yield
+
+
+def _vector(name: str, group: int, command: int, tlv, expects_response=None) -> dict:
+    return {
+        "name": name,
+        "group": group,
+        "command": command,
+        "expects_response": expects_response,
+        "body": ff09.build_tlv(tlv).hex(),
+    }
+
+
+def build_vectors() -> list[dict]:
+    """Plaintext request bodies the Python builds for fixed inputs. A second
+    implementation must build the same bytes. Epochs are 1 (2 for 0x0005)."""
+    out = []
+    with _fixed_epochs(1, 2):
+        for command, tlv, expects in ff09.handshake_steps():
+            out.append(_vector(f"handshake_{command:04x}", ff09.GROUP_SESSION, command, tlv, expects))
+    out.append(
+        _vector("key_exchange", ff09.GROUP_SESSION, 0x0021, [(0xA1, VECTOR_PUBLIC_KEY)], True)
+    )
+    with _fixed_epochs(1):
+        for command, tlv, expects in ff09.post_session_steps(VECTOR_ACCOUNT_ID):
+            out.append(_vector(f"session_{command:04x}", ff09.GROUP_SESSION, command, tlv, expects))
+        out.append(
+            _vector("status_probe", ff09.GROUP_TELEMETRY, ff09.CMD_STATUS, ff09.status_probe_tlv())
+        )
+        out.append(
+            _vector(
+                "realtime_probe", ff09.GROUP_TELEMETRY, ff09.CMD_REALTIME,
+                ff09.realtime_probe_tlv(VECTOR_ACCOUNT_ID),
+            )
+        )
+        g = ff09.GROUP_TELEMETRY
+        out.append(
+            _vector("cover_select", g, charger.CMD_SET_SCREENSAVER,
+                    charger.screensaver_select_tlv(24551, 0x1DA2DDCA))
+        )
+        out.append(
+            _vector("cover_transfer_start", g, charger.CMD_TRANSFER_START,
+                    charger.screensaver_transfer_start_tlv(
+                        45470, 0xC126BFEF, 25397, chunk_count=163))
+        )
+        out.append(
+            _vector("cover_chunk", g, charger.CMD_TRANSFER_DATA,
+                    charger.screensaver_chunk_tlv(5, bytes(range(156))))
+        )
+        out.append(
+            _vector("cover_chunk_short", g, charger.CMD_TRANSFER_DATA,
+                    charger.screensaver_chunk_tlv(162, bytes(range(10))))
+        )
+    return out
 
 
 # --- spec ------------------------------------------------------------------
@@ -59,6 +159,30 @@ def build_spec() -> dict:
             "command_status": ff09.CMD_STATUS,
             "command_realtime": ff09.CMD_REALTIME,
         },
+        "handshake": {
+            "tx_header": "0300",
+            "cmd_0022_a3": ff09.CMD_0022_A3.hex(),
+            "cmd_0022_a5": ff09.CMD_0022_A5.decode("ascii"),
+            "cmd_020a_a2": ff09.CMD_020A_A2.hex(),
+            "account_id_length": 40,
+            "public_key_length": 64,
+        },
+        "cover": {
+            "command_select": charger.CMD_SET_SCREENSAVER,
+            "command_transfer_start": charger.CMD_TRANSFER_START,
+            "command_transfer_data": charger.CMD_TRANSFER_DATA,
+            "type_custom": charger.SCREENSAVER_TYPE_CUSTOM,
+            "chunk_size": charger.SCREENSAVER_CHUNK,
+            "ack_every": charger.SCREENSAVER_ACK_EVERY,
+            "url_key": charger._SCREENSAVER_URL_KEY[1:].decode("ascii"),
+            "result_codes": RESULT_CODES,
+        },
+        "timing_ms": TIMING_MS,
+        "vectors": {
+            "account_id": VECTOR_ACCOUNT_ID,
+            "public_key": VECTOR_PUBLIC_KEY.hex(),
+            "requests": build_vectors(),
+        },
         "devices": {
             "charger": {
                 "name": charger.PROFILE.name,
@@ -78,6 +202,7 @@ def build_spec() -> dict:
                 "tables": {
                     "cable_capability": charger.CABLE_CAPABILITY_LABELS,
                     "charging_info": charger.CHARGING_INFO_LABELS,
+                    "cable_profiles": {k: list(v) for k, v in charger.CABLE_PROFILES.items()},
                     "vendor_names": {f"0x{k:04X}": v for k, v in charger.USB_VENDOR_NAMES.items()},
                     "device_models": {
                         f"0x{vid:04X}:0x{pid:04X}": name

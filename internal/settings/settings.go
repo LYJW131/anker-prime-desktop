@@ -5,40 +5,50 @@ package settings
 
 // Settings is everything the user can change.
 type Settings struct {
-	Theme     string         `json:"theme"` // "system", "light" or "dark"
-	ShowDock  bool           `json:"show_dock"`
-	Charger   Device         `json:"charger"`
-	PowerBank Device         `json:"powerbank"`
-	MenuBar   MenuBar        `json:"menu_bar"`
-	Panel     Panel          `json:"panel"`
+	Theme    string   `json:"theme"`    // "system", "light" or "dark"
+	Language string   `json:"language"` // "" follows the system; else "en", "zh-Hans" or "ja"
+	ShowDock bool     `json:"show_dock"`
+	Devices  []Device `json:"devices"` // in the order the sidebar lists them
+	MenuBar  MenuBar  `json:"menu_bar"`
+	Panel    Panel    `json:"panel"`
 }
 
-// Device is one device's connection settings.
+// Device is one added device.
 type Device struct {
-	Enabled    bool   `json:"enabled"`
-	Peripheral string `json:"peripheral"` // CoreBluetooth identifier; "" until paired
-	Name       string `json:"name"`       // advertised name when paired
-	IdleSleep  bool   `json:"idle_sleep"` // power bank only: release it while idle so it can sleep
+	ID        string `json:"id"`         // the CoreBluetooth identifier, stable on this Mac
+	Model     string `json:"model"`      // a model.ID
+	Name      string `json:"name"`       // advertised name, which is the serial number
+	Nickname  string `json:"nickname"`   // the user's name for it; "" shows the model's name
+	Enabled   bool   `json:"enabled"`    // keep it connected
+	IdleSleep bool   `json:"idle_sleep"` // release it while idle so it can sleep, where the model allows
 }
 
 // MenuBar is what the menu bar item shows.
 type MenuBar struct {
-	Fields   []string `json:"fields"`    // field ids, in order, joined into the title
+	// Fields are "<device id>/<field id>", in order, joined into the
+	// title. Nil shows each device's headline field.
+	Fields   []string `json:"fields"`
 	ShowIcon bool     `json:"show_icon"` // the template icon before the title
 }
 
 // Panel is what the menu bar panel shows.
 type Panel struct {
-	Cards []string `json:"cards"` // card ids, in order; a card not listed is hidden
+	// Cards are "<device id>/<card id>", in order. Nil shows each
+	// device's main card.
+	Cards []string `json:"cards"`
 }
 
-// Default is the configuration of a first launch.
+// Default is the configuration of a first launch: no devices yet.
 func Default() Settings {
-	return Settings{
-		Theme:     "system",
-		Charger:   Device{Enabled: true},
-		PowerBank: Device{Enabled: true, IdleSleep: true},
-		MenuBar:   MenuBar{Fields: []string{"powerbank.battery", "charger.total"}, ShowIcon: true},
-		Panel:     Panel{Cards: []string{"charger", "powerbank", "charger.ports", "powerbank.ports"}},
+	return Settings{Theme: "system", MenuBar: MenuBar{ShowIcon: true}}
+}
+
+// Device returns the added device with id.
+func (s *Settings) Device(id string) (*Device, bool) {
+	for i := range s.Devices {
+		if s.Devices[i].ID == id {
+			return &s.Devices[i], true
+		}
 	}
+	return nil, false
 }

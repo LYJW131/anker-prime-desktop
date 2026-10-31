@@ -31,6 +31,11 @@ type Port struct {
 	ChargingInfo *string `json:"charging_info"`
 	DeviceName   *string `json:"device_name"`
 	Vendor       *string `json:"vendor"`
+
+	// Sampled is set once VoltageV, CurrentA and PowerW have been read from
+	// the device. Until then the JSON carries null for the three, as the
+	// Python contract does, and the Go fields hold zero.
+	Sampled bool `json:"-"`
 }
 
 // Identity comes from the 0x0029 handshake reply.
@@ -60,7 +65,7 @@ type PowerBank struct {
 	ThermalState         *int     `json:"thermal_state"` // 1 normal, 2 too hot to charge
 	ThermalLimited       bool     `json:"thermal_limited"`
 	BatteryPercent       *float64 `json:"battery_percent"`
-	Charging             bool     `json:"charging"`
+	Charging             bool     `json:"charging"`        // see ChargingKnown
 	TimeLeftHours        *int     `json:"time_left_hours"` // time to full; 0h00m while discharging
 	TimeLeftMinutes      *int     `json:"time_left_minutes"`
 	InputPowerW          *float64 `json:"input_power_w"`
@@ -73,4 +78,8 @@ type PowerBank struct {
 	PomodoroEnabled      *bool    `json:"pomodoro_enabled"`
 	BatteryHealthPercent *int     `json:"battery_health_percent"` // sent once per connection, in the snapshot
 	ScreenBrightness     *int     `json:"screen_brightness"`
+
+	// ChargingKnown is set after the first telemetry frame. Until then the
+	// JSON carries null for charging, as the Python contract does.
+	ChargingKnown bool `json:"-"`
 }

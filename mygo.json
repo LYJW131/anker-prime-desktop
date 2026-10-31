@@ -9,7 +9,11 @@
     "minimumSystemVersion": "13.0",
     "infoPlist": {
       "LSUIElement": true,
-      "NSBluetoothAlwaysUsageDescription": "Anker Prime 通过蓝牙读取并控制你的 Anker 充电头和充电宝。"
+      "NSBluetoothAlwaysUsageDescription": "Anker Prime uses Bluetooth to read and control your Anker devices."
     }
+  },
+  "i18n": {
+    "dir": "locales",
+    "source": "en"
   }
 }

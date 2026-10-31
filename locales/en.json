@@ -1,0 +1,869 @@
+{
+  "@@locale": "en",
+  "appName": "Anker Prime",
+  "@appName": {
+    "description": "The window's title."
+  },
+  "navOverview": "Overview",
+  "@navOverview": {
+    "description": "Sidebar: the page of every device at a glance."
+  },
+  "navDevices": "Devices",
+  "@navDevices": {
+    "description": "Sidebar: the small caps label over the added devices."
+  },
+  "navAddDevice": "Add Device",
+  "@navAddDevice": {
+    "description": "Sidebar row, page title and button that add a device."
+  },
+  "navSettings": "Settings",
+  "@navSettings": {
+    "description": "Sidebar: the app's settings page, and its title."
+  },
+  "sidebarHide": "Hide Sidebar",
+  "@sidebarHide": {
+    "description": "View menu item and the sidebar button's name."
+  },
+  "sidebarShow": "Show Sidebar",
+  "@sidebarShow": {
+    "description": "View menu item and the sidebar button's name."
+  },
+  "menuView": "View",
+  "@menuView": {
+    "description": "The View menu of the menu bar."
+  },
+  "trayOpen": "Open Anker Prime",
+  "@trayOpen": {
+    "description": "Menu bar item's menu and the panel's button."
+  },
+  "traySettings": "Settings…",
+  "@traySettings": {
+    "description": "Menu bar item's menu."
+  },
+  "trayQuit": "Quit Anker Prime",
+  "@trayQuit": {
+    "description": "Menu bar item's menu."
+  },
+  "trayIn": "In {value}",
+  "@trayIn": {
+    "description": "Menu bar title: a power bank's input power, as \"68W\".",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "68W"
+      }
+    }
+  },
+  "trayOut": "Out {value}",
+  "@trayOut": {
+    "description": "Menu bar title: a power bank's output power, as \"5W\".",
+    "placeholders": {
+      "value": {
+        "type": "String",
+        "example": "5W"
+      }
+    }
+  },
+  "chooseCoverTitle": "Add Cover",
+  "@chooseCoverTitle": {
+    "description": "Title of the file chooser for a cover picture."
+  },
+  "chooseCoverFilter": "Images",
+  "@chooseCoverFilter": {
+    "description": "File type filter of the cover chooser."
+  },
+  "modelA2687": "Anker Prime Charger (160W)",
+  "@modelA2687": {
+    "description": "Model A2687's full name."
+  },
+  "modelA110G": "Anker Prime Power Bank (20K, 220W)",
+  "@modelA110G": {
+    "description": "Model A110G's full name."
+  },
+  "modelShortA2687": "Prime Charger 160W",
+  "@modelShortA2687": {
+    "description": "Model A2687's name in the sidebar and the panel, which are narrow."
+  },
+  "modelShortA110G": "Prime Power Bank 20K",
+  "@modelShortA110G": {
+    "description": "Model A110G's name in the sidebar and the panel, which are narrow."
+  },
+  "modelByte": "Model {code}",
+  "@modelByte": {
+    "description": "An Anker Prime device of a model the app does not know, by its model byte.",
+    "placeholders": {
+      "code": {
+        "type": "String",
+        "example": "0x0B"
+      }
+    }
+  },
+  "unsupported": "Not supported yet",
+  "@unsupported": {
+    "description": "Add Device: a device of a model the app cannot control yet."
+  },
+  "stateOff": "Off",
+  "@stateOff": {
+    "description": "A device the user turned off (Keep Connected off)."
+  },
+  "stateBluetoothOff": "Bluetooth Off",
+  "@stateBluetoothOff": {
+    "description": "The Mac's Bluetooth is off."
+  },
+  "stateUnauthorized": "No Bluetooth Access",
+  "@stateUnauthorized": {
+    "description": "The app may not use Bluetooth."
+  },
+  "stateUnpaired": "Not Set Up",
+  "@stateUnpaired": {
+    "description": "A device without a Bluetooth peripheral."
+  },
+  "stateConnecting": "Connecting",
+  "@stateConnecting": {
+    "description": "A connection is on its way."
+  },
+  "stateHandshaking": "Authenticating",
+  "@stateHandshaking": {
+    "description": "Connected, setting up the encrypted session."
+  },
+  "stateConnected": "Connected",
+  "@stateConnected": {
+    "description": "Streaming live numbers."
+  },
+  "stateStale": "Out of Date",
+  "@stateStale": {
+    "description": "Connected, but no numbers came for a while."
+  },
+  "stateWaiting": "Waiting for Data",
+  "@stateWaiting": {
+    "description": "Connected, before the first numbers."
+  },
+  "stateDisconnected": "Disconnected",
+  "@stateDisconnected": {
+    "description": "Lost or dropped; a retry may follow."
+  },
+  "stateSleeping": "Sleeping",
+  "@stateSleeping": {
+    "description": "A power bank released while idle so it can sleep."
+  },
+  "deadOffTitle": "{name} is off",
+  "@deadOffTitle": {
+    "description": "A turned off device's page.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Prime Charger 160W"
+      }
+    }
+  },
+  "deadOffLine": "It connects as soon as you turn it on",
+  "@deadOffLine": {
+    "description": "A device's page while it shows nothing but its state."
+  },
+  "deadTurnOn": "Turn On",
+  "@deadTurnOn": {
+    "description": "Button that turns a device on."
+  },
+  "deadBluetoothOffLine": "Turn Bluetooth on in Control Center to reconnect",
+  "@deadBluetoothOffLine": {
+    "description": "A device's page while it shows nothing but its state."
+  },
+  "deadUnauthorizedLine": "Allow Anker Prime in System Settings › Privacy & Security › Bluetooth",
+  "@deadUnauthorizedLine": {
+    "description": "A device's page while it shows nothing but its state."
+  },
+  "deadSleepingLine": "Released while idle so it can sleep",
+  "@deadSleepingLine": {
+    "description": "A device's page while it shows nothing but its state."
+  },
+  "deadWake": "Wake and Connect",
+  "@deadWake": {
+    "description": "A device's page while it shows nothing but its state."
+  },
+  "deadDisconnectedLine": "Retrying shortly",
+  "@deadDisconnectedLine": {
+    "description": "A device's page while it shows nothing but its state."
+  },
+  "deadReconnect": "Reconnect Now",
+  "@deadReconnect": {
+    "description": "A device's page while it shows nothing but its state."
+  },
+  "deadWaitingTitle": "Connected, waiting for data",
+  "@deadWaitingTitle": {
+    "description": "A device's page while it shows nothing but its state."
+  },
+  "tabLive": "Status",
+  "@tabLive": {
+    "description": "Device page tab: the live numbers."
+  },
+  "tabCovers": "Covers",
+  "@tabCovers": {
+    "description": "Device page tab: the screen covers of a charger."
+  },
+  "tabSettings": "Settings",
+  "@tabSettings": {
+    "description": "Device page tab: this device's settings."
+  },
+  "connDisconnect": "Disconnect",
+  "@connDisconnect": {
+    "description": "Device settings: the connection row's button."
+  },
+  "connConnect": "Connect",
+  "@connConnect": {
+    "description": "Device settings: the connection row's button."
+  },
+  "chargerTotal": "Total Output",
+  "@chargerTotal": {
+    "description": "Charger: the label over its total power."
+  },
+  "sectionDevice": "Device",
+  "@sectionDevice": {
+    "description": "Small caps label over a device's facts."
+  },
+  "factProduct": "Product",
+  "@factProduct": {
+    "description": "A device's model, by name."
+  },
+  "factModel": "Model",
+  "@factModel": {
+    "description": "A device's model number, as A2687."
+  },
+  "factSerial": "Serial Number",
+  "@factSerial": {
+    "description": "A device's facts list: the name of a fact."
+  },
+  "factFirmware": "Firmware",
+  "@factFirmware": {
+    "description": "A device's facts list: the name of a fact."
+  },
+  "factMAC": "MAC Address",
+  "@factMAC": {
+    "description": "A device's facts list: the name of a fact."
+  },
+  "factBrightness": "Screen Brightness",
+  "@factBrightness": {
+    "description": "A device's facts list: the name of a fact."
+  },
+  "factCover": "Current Cover",
+  "@factCover": {
+    "description": "A device's facts list: the name of a fact."
+  },
+  "factTemperature": "Temperature",
+  "@factTemperature": {
+    "description": "A device's facts list: the name of a fact."
+  },
+  "factHealth": "Battery Health",
+  "@factHealth": {
+    "description": "A device's facts list: the name of a fact."
+  },
+  "factBluetoothID": "Bluetooth ID",
+  "@factBluetoothID": {
+    "description": "A device's facts list: the name of a fact."
+  },
+  "portIdle": "Idle",
+  "@portIdle": {
+    "description": "A port with nothing drawing, or an idle power bank."
+  },
+  "portOutput": "Output",
+  "@portOutput": {
+    "description": "A port giving power; the legend of a power bank's output."
+  },
+  "portInput": "Input",
+  "@portInput": {
+    "description": "A port taking power; the legend of a power bank's input."
+  },
+  "portPowered": "Powered",
+  "@portPowered": {
+    "description": "A port with voltage but no load."
+  },
+  "portDocked": "Docked",
+  "@portDocked": {
+    "description": "A power bank's dock with the bank on it."
+  },
+  "portDock": "Dock",
+  "@portDock": {
+    "description": "A power bank's dock, as a port's name."
+  },
+  "metricVoltage": "Voltage",
+  "@metricVoltage": {
+    "description": "A port card: a cell of a measured value."
+  },
+  "metricCurrent": "Current",
+  "@metricCurrent": {
+    "description": "A port card: a cell of a measured value."
+  },
+  "portNothing": "Nothing plugged in",
+  "@portNothing": {
+    "description": "A port card."
+  },
+  "portCable": "Cable",
+  "@portCable": {
+    "description": "A port card."
+  },
+  "portProtocol": "Protocol",
+  "@portProtocol": {
+    "description": "A port card."
+  },
+  "portDevice": "Device",
+  "@portDevice": {
+    "description": "What is plugged into a port."
+  },
+  "portDirection": "Direction",
+  "@portDirection": {
+    "description": "A port card."
+  },
+  "portState": "State",
+  "@portState": {
+    "description": "A port card."
+  },
+  "roleBoth": "In and out",
+  "@roleBoth": {
+    "description": "A power bank's port card: which way power may flow."
+  },
+  "roleIn": "Input only",
+  "@roleIn": {
+    "description": "A power bank's port card: which way power may flow."
+  },
+  "roleOut": "Output only",
+  "@roleOut": {
+    "description": "A power bank's port card: which way power may flow."
+  },
+  "portStateNone": "Not plugged in",
+  "@portStateNone": {
+    "description": "A port card."
+  },
+  "portStateDrawing": "Drawing power",
+  "@portStateDrawing": {
+    "description": "A port card."
+  },
+  "portStateSupplying": "Supplying power",
+  "@portStateSupplying": {
+    "description": "A port card."
+  },
+  "portStateNoLoad": "Powered, no load",
+  "@portStateNoLoad": {
+    "description": "A port card."
+  },
+  "portStateDocked": "On the dock",
+  "@portStateDocked": {
+    "description": "A port card."
+  },
+  "bankBattery": "Battery",
+  "@bankBattery": {
+    "description": "Power bank: the label over its charge."
+  },
+  "flowThermal": "Thermal Limit",
+  "@flowThermal": {
+    "description": "Power bank too hot to charge at full power."
+  },
+  "flowBoth": "Pass-Through",
+  "@flowBoth": {
+    "description": "Power bank charging and discharging at once."
+  },
+  "flowCharging": "Charging",
+  "@flowCharging": {
+    "description": "A power bank's state pill."
+  },
+  "flowDischarging": "Discharging",
+  "@flowDischarging": {
+    "description": "A power bank's state pill."
+  },
+  "fullIn": "Full in {time}",
+  "@fullIn": {
+    "description": "Power bank: when it will be full, as \"1:05\".",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "1:05"
+      }
+    }
+  },
+  "chargerNothing": "Nothing is charging",
+  "@chargerNothing": {
+    "description": "A charger's card."
+  },
+  "chargerMore": "{line}, {count, plural, one {# more port} other {# more ports}} in use",
+  "@chargerMore": {
+    "description": "Charger: the busiest port, then how many others give power.",
+    "placeholders": {
+      "line": {
+        "type": "String",
+        "example": "C1 · MacBook Pro"
+      },
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "overviewPorts": "Ports",
+  "@overviewPorts": {
+    "description": "A device's ports card."
+  },
+  "emptyTitle": "No devices yet",
+  "@emptyTitle": {
+    "description": "Overview before any device is added."
+  },
+  "coversAdd": "Add Image",
+  "@coversAdd": {
+    "description": "A charger's covers tab."
+  },
+  "coversEmpty": "No covers yet",
+  "@coversEmpty": {
+    "description": "A charger's covers tab."
+  },
+  "coverCurrent": "Current",
+  "@coverCurrent": {
+    "description": "The cover the charger shows now."
+  },
+  "coverSet": "Set as Cover",
+  "@coverSet": {
+    "description": "A charger's covers tab."
+  },
+  "coverRename": "Rename…",
+  "@coverRename": {
+    "description": "A charger's covers tab."
+  },
+  "coverRemove": "Remove…",
+  "@coverRemove": {
+    "description": "A charger's covers tab."
+  },
+  "coverSendFailed": "Couldn't Send",
+  "@coverSendFailed": {
+    "description": "A charger's covers tab."
+  },
+  "coverSwitching": "Switching…",
+  "@coverSwitching": {
+    "description": "A charger's covers tab."
+  },
+  "coverSending": "Sending to Charger",
+  "@coverSending": {
+    "description": "A charger's covers tab."
+  },
+  "renameTitle": "Rename Cover",
+  "@renameTitle": {
+    "description": "The dialog that renames a cover."
+  },
+  "renamePlaceholder": "Name",
+  "@renamePlaceholder": {
+    "description": "The dialog that renames a cover."
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "A dialog's button."
+  },
+  "save": "Save",
+  "@save": {
+    "description": "A dialog's or a form's button."
+  },
+  "remove": "Remove",
+  "@remove": {
+    "description": "The dialog that removes a cover or a device."
+  },
+  "confirmRemove": "Remove “{name}”?",
+  "@confirmRemove": {
+    "description": "Title of the dialog that removes a cover or a device.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Sunset"
+      }
+    }
+  },
+  "removeCoverBody": "It leaves this Mac's library only; pictures already on the charger stay.",
+  "@removeCoverBody": {
+    "description": "The dialog that removes a cover or a device."
+  },
+  "removeDeviceBody": "It disconnects and leaves the list; you can add it again later.",
+  "@removeDeviceBody": {
+    "description": "The dialog that removes a cover or a device."
+  },
+  "devGeneral": "General",
+  "@devGeneral": {
+    "description": "Device settings: the card of its name and connection."
+  },
+  "devAbout": "About",
+  "@devAbout": {
+    "description": "Device settings: the card of its model and serial."
+  },
+  "devName": "Name",
+  "@devName": {
+    "description": "A device's settings tab."
+  },
+  "devKeepConnected": "Keep Connected",
+  "@devKeepConnected": {
+    "description": "A device's settings tab."
+  },
+  "devIdleSleep": "Disconnect While Idle",
+  "@devIdleSleep": {
+    "description": "Release the power bank while idle so it can sleep."
+  },
+  "devConnection": "Connection",
+  "@devConnection": {
+    "description": "A device's settings tab."
+  },
+  "devRemove": "Remove Device",
+  "@devRemove": {
+    "description": "A device's settings tab."
+  },
+  "addScanning": "Looking for Anker Prime devices nearby",
+  "@addScanning": {
+    "description": "Add Device page."
+  },
+  "addStopped": "Scan stopped",
+  "@addStopped": {
+    "description": "Add Device page."
+  },
+  "addNoneFound": "No devices found",
+  "@addNoneFound": {
+    "description": "Add Device page."
+  },
+  "addStop": "Stop",
+  "@addStop": {
+    "description": "Add Device page."
+  },
+  "addRescan": "Scan Again",
+  "@addRescan": {
+    "description": "Add Device page."
+  },
+  "addAdd": "Add",
+  "@addAdd": {
+    "description": "Button that adds a found device; small caps label over the menu bar's catalog."
+  },
+  "addAdded": "Added",
+  "@addAdded": {
+    "description": "A found device already in the list."
+  },
+  "setMenuBar": "Menu Bar",
+  "@setMenuBar": {
+    "description": "Settings page."
+  },
+  "setShowIcon": "Show Icon",
+  "@setShowIcon": {
+    "description": "Settings page."
+  },
+  "setShownValues": "Shown Values",
+  "@setShownValues": {
+    "description": "Settings page."
+  },
+  "setIconOnly": "Icon only",
+  "@setIconOnly": {
+    "description": "Settings page."
+  },
+  "setAddItem": "Add {name}",
+  "@setAddItem": {
+    "description": "Accessible name of a catalog chip.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Battery"
+      }
+    }
+  },
+  "setPanel": "Menu Bar Panel",
+  "@setPanel": {
+    "description": "Settings page."
+  },
+  "setShownCards": "Shown Cards",
+  "@setShownCards": {
+    "description": "Settings page."
+  },
+  "setOpenOnly": "Open button only",
+  "@setOpenOnly": {
+    "description": "Settings page."
+  },
+  "moveUp": "Move Up",
+  "@moveUp": {
+    "description": "Settings: a button of an ordered list's row."
+  },
+  "moveDown": "Move Down",
+  "@moveDown": {
+    "description": "Settings: a button of an ordered list's row."
+  },
+  "setAccount": "Anker Account ID",
+  "@setAccount": {
+    "description": "Settings page."
+  },
+  "acctSaved": "Saved",
+  "@acctSaved": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctNotSet": "Not Set",
+  "@acctNotSet": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctWayImport": "From Telemetry Center",
+  "@acctWayImport": {
+    "description": "The old telemetry app keeps the ID in the Keychain."
+  },
+  "acctWayPaste": "Paste ID",
+  "@acctWayPaste": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctWayLogin": "Sign In",
+  "@acctWayLogin": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctImport": "Import",
+  "@acctImport": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctImporting": "Importing…",
+  "@acctImporting": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctIDPlaceholder": "40-character account ID",
+  "@acctIDPlaceholder": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctSaving": "Saving…",
+  "@acctSaving": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctAccount": "Email or phone number",
+  "@acctAccount": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctPassword": "Password",
+  "@acctPassword": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctLogin": "Sign In",
+  "@acctLogin": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctLoggingIn": "Signing In…",
+  "@acctLoggingIn": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctLoginNote": "Signing in signs the phone app out",
+  "@acctLoginNote": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctImported": "Imported from Telemetry Center",
+  "@acctImported": {
+    "description": "Settings: the Anker account card."
+  },
+  "acctLoggedIn": "Signed in and saved the ID",
+  "@acctLoggedIn": {
+    "description": "Settings: the Anker account card."
+  },
+  "setGeneral": "General",
+  "@setGeneral": {
+    "description": "Settings: the card of language, theme and Dock."
+  },
+  "setLanguage": "Language",
+  "@setLanguage": {
+    "description": "Settings page."
+  },
+  "setTheme": "Theme",
+  "@setTheme": {
+    "description": "Settings page."
+  },
+  "setSystem": "System",
+  "@setSystem": {
+    "description": "Theme or language that follows the system."
+  },
+  "setLight": "Light",
+  "@setLight": {
+    "description": "Settings page."
+  },
+  "setDark": "Dark",
+  "@setDark": {
+    "description": "Settings page."
+  },
+  "setDock": "Show in Dock",
+  "@setDock": {
+    "description": "Settings page."
+  },
+  "fieldTotal": "Total power",
+  "@fieldTotal": {
+    "description": "Settings: a value the menu bar can show."
+  },
+  "fieldPort": "{port} power",
+  "@fieldPort": {
+    "description": "A charger port's power.",
+    "placeholders": {
+      "port": {
+        "type": "String",
+        "example": "C1"
+      }
+    }
+  },
+  "fieldBattery": "Battery",
+  "@fieldBattery": {
+    "description": "Settings: a value the menu bar can show."
+  },
+  "fieldFlow": "Net power (±)",
+  "@fieldFlow": {
+    "description": "Settings: a value the menu bar can show."
+  },
+  "fieldInput": "Input power",
+  "@fieldInput": {
+    "description": "Settings: a value the menu bar can show."
+  },
+  "fieldOutput": "Output power",
+  "@fieldOutput": {
+    "description": "Settings: a value the menu bar can show."
+  },
+  "fieldTimeToFull": "Time to full",
+  "@fieldTimeToFull": {
+    "description": "Settings: a value the menu bar can show."
+  },
+  "panelFlow": "Net power",
+  "@panelFlow": {
+    "description": "Panel: a power bank's input minus output."
+  },
+  "cardMain": "Summary",
+  "@cardMain": {
+    "description": "A device's main card in the menu bar panel."
+  },
+  "reasonJoin": "{what}: {why}",
+  "@reasonJoin": {
+    "description": "A failure, then why it failed.",
+    "placeholders": {
+      "what": {
+        "type": "String",
+        "example": "Settings weren't saved"
+      },
+      "why": {
+        "type": "String",
+        "example": "disk full"
+      }
+    }
+  },
+  "errManual": "Disconnected by you",
+  "@errManual": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errNoUserID": "No Anker account ID",
+  "@errNoUserID": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errStalled": "The data stream stalled",
+  "@errStalled": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errNoResponse": "The device didn't respond",
+  "@errNoResponse": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errNotConnected": "The device isn't connected",
+  "@errNotConnected": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errCoverNoData": "The charger lacks this picture and there is nothing to send",
+  "@errCoverNoData": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errCoverNotSwitched": "The picture arrived but the screen didn't switch",
+  "@errCoverNotSwitched": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errHandshake": "Authentication failed: {reason}",
+  "@errHandshake": {
+    "description": "An error, as a status line or a toast's reason.",
+    "placeholders": {
+      "reason": {
+        "type": "String",
+        "example": "timed out"
+      }
+    }
+  },
+  "errCoverRejected": "The charger refused command {command} (result {result})",
+  "@errCoverRejected": {
+    "description": "An error, as a status line or a toast's reason.",
+    "placeholders": {
+      "command": {
+        "type": "String",
+        "example": "0x021F"
+      },
+      "result": {
+        "type": "String",
+        "example": "0x01"
+      }
+    }
+  },
+  "errDisconnected": "The connection dropped",
+  "@errDisconnected": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errBluetoothOff": "Bluetooth is off",
+  "@errBluetoothOff": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errBluetoothDenied": "Bluetooth access isn't allowed",
+  "@errBluetoothDenied": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errTimeout": "Timed out",
+  "@errTimeout": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errUserIDFormat": "The account ID must be 40 letters and digits",
+  "@errUserIDFormat": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "errImportNotFound": "No account ID in Telemetry Center's Keychain item",
+  "@errImportNotFound": {
+    "description": "An error, as a status line or a toast's reason."
+  },
+  "noticeCoverShown": "Showing “{name}”",
+  "@noticeCoverShown": {
+    "description": "A toast.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Sunset"
+      }
+    }
+  },
+  "noticeCoverFailed": "The cover didn't change",
+  "@noticeCoverFailed": {
+    "description": "A toast."
+  },
+  "noticeCoverAdded": "Added “{name}”",
+  "@noticeCoverAdded": {
+    "description": "A toast.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Sunset"
+      }
+    }
+  },
+  "noticeCoverAddFailed": "Couldn't add the picture",
+  "@noticeCoverAddFailed": {
+    "description": "A toast."
+  },
+  "noticeCoverRemoveFailed": "Couldn't remove the picture",
+  "@noticeCoverRemoveFailed": {
+    "description": "A toast."
+  },
+  "noticeBluetooth": "Bluetooth isn't available",
+  "@noticeBluetooth": {
+    "description": "A toast."
+  },
+  "noticeLibrary": "The cover library isn't available",
+  "@noticeLibrary": {
+    "description": "A toast."
+  },
+  "noticeSettings": "Settings weren't saved",
+  "@noticeSettings": {
+    "description": "A toast."
+  },
+  "noticeDeviceAdded": "Added {name}",
+  "@noticeDeviceAdded": {
+    "description": "A toast.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "Prime Charger 160W"
+      }
+    }
+  },
+  "noticeUserIDSaved": "Account ID saved",
+  "@noticeUserIDSaved": {
+    "description": "A toast."
+  }
+}

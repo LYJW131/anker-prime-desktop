@@ -5,3 +5,5 @@ __pycache__/
 *.auth.json
 .env
 *.pklg
+/build/
+/.mygo/
