@@ -70,12 +70,16 @@ func New(cfg Config) *Device {
 func (d *Device) Configure(s settings.Device) {
 	d.mu.Lock()
 	moved := s.ID != d.want.ID || s.Enabled != d.want.Enabled
+	changed := moved || s.IdleSleep != d.want.IdleSleep
 	d.want = s
 	if moved {
 		d.manual = false
 	}
+	if changed {
+		close(d.changed)
+		d.changed = make(chan struct{})
+	}
 	d.mu.Unlock()
-	d.poke()
 }
 
 // Connect connects again now, after a Disconnect or while a retry waits.
