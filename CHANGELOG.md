@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 1.0.2
 
 - The account ID moves from the Keychain to a file of the app's data folder
   that only you can read: macOS no longer asks for your password after an
