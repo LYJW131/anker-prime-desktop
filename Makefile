@@ -2,15 +2,19 @@ GO ?= go
 SHOTS ?= build/shots
 BIN = Anker Prime Desktop
 APP = build/darwin-$(shell $(GO) env GOARCH)/$(BIN).app
+# The self-signed identity releases are signed with, when the login Keychain
+# has it, else ad hoc. One identity keeps the Keychain and Bluetooth grants
+# across rebuilds.
+SIGN ?= $(shell security find-identity -p codesigning 2>/dev/null | grep -q '"$(BIN)"' && echo "$(BIN)" || echo -)
 
 .PHONY: build app run demo test vet shots
 
 build:
 	CGO_ENABLED=0 $(GO) build ./...
 
-# The macOS app, ad-hoc signed, without a disk image.
+# The macOS app, without a disk image.
 app:
-	$(GO) tool mygo build -skip-dmg
+	$(GO) tool mygo build -skip-dmg -sign "$(SIGN)"
 
 run:
 	$(GO) tool mygo dev

@@ -47,16 +47,23 @@ Installed apps update from the latest release. The secret's key also lives
 in `~/Library/Application Support/mygo/update-keys` on lyjw's Mac; losing
 it strands installed apps.
 
+The macOS app is signed with a self-signed identity, "Anker Prime
+Desktop": the `MACOS_SIGNING_IDENTITY` secret in CI, the login Keychain and
+`~/Library/Application Support/mygo/codesign` on lyjw's Mac. macOS keeps an
+app's Keychain and Bluetooth grants for one signing identity, so an ad-hoc
+or other build asks for both again.
+
 ## Verify
 
 ```bash
 go vet ./... && go test ./...
 GOOS=windows go vet ./... && GOOS=linux go vet ./...
 debugger/.venv/bin/python tools/contract.py verify
-go tool mygo build -skip-dmg
+make app
 "build/darwin-arm64/Anker Prime Desktop.app/Contents/MacOS/Anker Prime Desktop" -demo -shots /tmp/anker-shots
 ```
 
-Look at the shots in both themes (add `-lang en`, `-lang ja`). CoreBluetooth
+`make app` signs with the identity when the Keychain has it, so rebuilds
+keep the grants. Look at the shots in both themes (add `-lang en`, `-lang ja`). CoreBluetooth
 aborts a process without Bluetooth permission: run the built binary from a
 terminal that has it, or `open` the app, to test against real devices.

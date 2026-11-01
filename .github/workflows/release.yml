@@ -1,9 +1,12 @@
 name: Release
 
-# Push a tag v<version> matching mygo.json's version: every platform builds
-# at once into a draft release, with the signed update manifests installed
-# apps read, and the release is published once all have uploaded. The
-# notes of the update window come from CHANGELOG.md.
+# Push a tag v<version> matching mygo.json's version: the platforms build
+# one after another into a draft release, with the signed update manifests
+# installed apps read, and the release is published once all have uploaded.
+# The notes of the update window come from CHANGELOG.md. The macOS app is
+# signed with the self-signed certificate in MACOS_SIGNING_IDENTITY (key and
+# certificate, PEM): one identity across versions keeps the Keychain and
+# Bluetooth grants of installed apps.
 
 on:
   push:
@@ -44,7 +47,7 @@ jobs:
       max-parallel: 1
       matrix:
         include:
-          - { name: macOS, os: macos-latest, platform: "darwin/arm64,darwin/amd64" }
+          - { name: macOS, os: macos-latest, platform: "darwin/arm64,darwin/amd64", sign: "Anker Prime Desktop" }
           - { name: Windows, os: ubuntu-latest, platform: "windows/amd64,windows/arm64" }
           - { name: Linux, os: ubuntu-latest, platform: "linux/amd64,linux/arm64" }
     steps:
@@ -55,11 +58,27 @@ jobs:
       - name: Install NSIS, for the Windows installers
         if: matrix.name == 'Windows'
         run: sudo apt-get update && sudo apt-get install -y nsis
+      - name: Import the code signing identity
+        if: matrix.sign
+        env:
+          MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+        run: |
+          kc="$RUNNER_TEMP/signing.keychain-db"
+          pass=$(openssl rand -hex 16)
+          security create-keychain -p "$pass" "$kc"
+          security set-keychain-settings -lut 21600 "$kc"
+          security unlock-keychain -p "$pass" "$kc"
+          printf '%s\n' "$MACOS_SIGNING_IDENTITY" > "$RUNNER_TEMP/identity.pem"
+          security import "$RUNNER_TEMP/identity.pem" -k "$kc" -T /usr/bin/codesign
+          rm "$RUNNER_TEMP/identity.pem"
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$pass" "$kc" >/dev/null
+          security list-keychains -d user -s "$kc" $(security list-keychains -d user | tr -d '"')
+          security find-identity -p codesigning "$kc" | grep -q "\"${{ matrix.sign }}\""
       - name: Build, sign the updates and upload to the draft
         env:
           GH_TOKEN: ${{ github.token }}
           MYGO_UPDATER_PRIVATE_KEY: ${{ secrets.MYGO_UPDATER_PRIVATE_KEY }}
-        run: go tool mygo build -platform "${{ matrix.platform }}" -upload
+        run: go tool mygo build -platform "${{ matrix.platform }}" -sign "${{ matrix.sign || '-' }}" -upload
 
   publish:
     needs: build
