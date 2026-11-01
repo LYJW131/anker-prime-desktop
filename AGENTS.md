@@ -29,8 +29,9 @@ README.md has the layout; docs/adding-a-device.md the path for a new model.
   and commit `locales/catalog_gen.go`. Links and the backend return sentinel
   errors (`internal/link/status.go`, `internal/store`) and notice kinds; the
   views word them.
-- The Anker account ID lives in the system secret store (`mygo.Secrets`, key
-  `anker-user-id`). Never log or print it. `ANKER_USER_ID` overrides it for
+- The Anker account ID lives in the file `anker-user-id` of the user data
+  directory, mode 0600, not the Keychain (`internal/backend#userIDFile`
+  says why). Never log or print it. `ANKER_USER_ID` overrides it for
   development builds.
 - Logging in to the Anker cloud can sign the phone app out: only on the
   user's click, never in tests (cloud tests use `httptest`).
@@ -50,8 +51,8 @@ it strands installed apps.
 The macOS app is signed with a self-signed identity, "Anker Prime
 Desktop": the `MACOS_SIGNING_IDENTITY` secret in CI, the login Keychain and
 `~/Library/Application Support/mygo/codesign` on lyjw's Mac. macOS keeps an
-app's Keychain and Bluetooth grants for one signing identity, so an ad-hoc
-or other build asks for both again.
+app's Bluetooth grant for one signing identity, so an ad-hoc or other
+build asks for it again.
 
 ## Verify
 
@@ -64,6 +65,6 @@ make app
 ```
 
 `make app` signs with the identity when the Keychain has it, so rebuilds
-keep the grants. Look at the shots in both themes (add `-lang en`, `-lang ja`). CoreBluetooth
+keep the Bluetooth grant. Look at the shots in both themes (add `-lang en`, `-lang ja`). CoreBluetooth
 aborts a process without Bluetooth permission: run the built binary from a
 terminal that has it, or `open` the app, to test against real devices.

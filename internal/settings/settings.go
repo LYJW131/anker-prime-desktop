@@ -1,6 +1,6 @@
 // Package settings is the app's saved configuration, one JSON file in the
-// user data directory. The Anker account ID is not here: it lives in the
-// Keychain (mygo.Secrets).
+// user data directory. The Anker account ID is not here: it has a file of
+// its own (internal/backend#userIDFile).
 package settings
 
 // Settings is everything the user can change.

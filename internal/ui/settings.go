@@ -1,7 +1,6 @@
 package ui
 
 import (
-	"errors"
 	"fmt"
 	"runtime"
 	"slices"
@@ -11,7 +10,6 @@ import (
 	"github.com/egoist/mygo/ui"
 
 	"github.com/LYJW131/anker-prime-desktop/internal/settings"
-	"github.com/LYJW131/anker-prime-desktop/internal/store"
 	"github.com/LYJW131/anker-prime-desktop/locales"
 )
 
@@ -349,11 +347,11 @@ func (a *App) accountCard(c *ui.Context, k *Tokens) {
 		done := func(ok acctResult) func(error) {
 			return func(err error) {
 				f.busy = false
-				if err != nil && !errors.Is(err, store.ErrSessionOnly) {
+				if err != nil {
 					f.done, f.failed = acctNone, err
 					return
 				}
-				f.done, f.failed = ok, err
+				f.done, f.failed = ok, nil
 				f.pasteID, f.password = "", ""
 			}
 		}
@@ -413,9 +411,6 @@ func (a *App) accountCard(c *ui.Context, k *Tokens) {
 			switch {
 			case f.failed != nil:
 				text, col = ErrText(f.failed), k.Bad
-				if errors.Is(f.failed, store.ErrSessionOnly) {
-					col = k.Warn
-				}
 			case f.done == acctImported:
 				text = locales.AcctImported()
 			case f.done == acctSaved:

@@ -26,7 +26,7 @@ type Store struct {
 	Found    []link.Found // what it found, supported or not
 
 	Settings  settings.Settings
-	HasUserID bool // an Anker account ID is in the Keychain
+	HasUserID bool // an Anker account ID is stored
 
 	Notice *Notice // the toast, cleared after a while
 
@@ -123,7 +123,6 @@ const (
 var (
 	ErrUserIDFormat   = errors.New("the account ID must be 40 letters and digits")
 	ErrImportNotFound = errors.New("no account ID in the telemetry app's Keychain item")
-	// ErrSessionOnly says the ID is in use but the system has no secret
-	// store to keep it in.
-	ErrSessionOnly = errors.New("the account ID is kept for this session only: no secret store")
+	// ErrNoDataDir says there is no user data directory to keep the ID in.
+	ErrNoDataDir = errors.New("no user data directory to keep the account ID in")
 )

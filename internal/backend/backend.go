@@ -1,10 +1,9 @@
 // Package backend is the real Backend: the added devices over Bluetooth,
-// the cover library on disk, and the Anker account ID in the Keychain.
+// the cover library and the Anker account ID on disk.
 package backend
 
 import (
 	"context"
-	"errors"
 	"log/slog"
 	"os"
 	"os/exec"
@@ -27,7 +26,8 @@ import (
 	"github.com/LYJW131/anker-prime-desktop/internal/store"
 )
 
-// userIDKey is the Keychain item of the Anker account ID.
+// userIDKey is the secret store item earlier versions kept the Anker
+// account ID in, which Start moves to userIDFile.
 const userIDKey = "anker-user-id"
 
 // The telemetry app's Keychain item, which ImportUserID copies.
@@ -50,6 +50,7 @@ type Backend struct {
 	links   map[string]*running // by device id
 	lib     *cover.Library
 
+	dir      string // the user data directory
 	mu       sync.Mutex
 	userID   string
 	stopScan func()
@@ -77,6 +78,7 @@ func (b *Backend) Start(s *store.Store) {
 	b.s = s
 	dir, err := mygo.App.Path(mygo.PathUserData)
 	if err == nil {
+		b.dir = dir
 		b.lib, err = cover.Open(filepath.Join(dir, "covers"))
 	}
 	if err != nil {
@@ -86,13 +88,11 @@ func (b *Backend) Start(s *store.Store) {
 		s.Covers = b.lib.List()
 	}
 
-	// ANKER_USER_ID overrides the Keychain, for development builds whose
-	// changing signature would raise a Keychain prompt on every rebuild.
+	// ANKER_USER_ID overrides the stored ID, for development.
 	id := os.Getenv("ANKER_USER_ID")
-	if id == "" {
-		if v, err := mygo.Secrets.Get(userIDKey); err == nil {
-			id = string(v)
-		}
+	if id == "" && b.dir != "" {
+		id = loadUserID(b.dir, func() ([]byte, error) { return mygo.Secrets.Get(userIDKey) },
+			func() error { return mygo.Secrets.Delete(userIDKey) })
 	}
 	b.userID = id
 	s.HasUserID = len(id) == 40
@@ -266,20 +266,14 @@ func (b *Backend) SetUserID(id string, done func(error)) {
 }
 
 func (b *Backend) storeUserID(id string) error {
-	if len(id) != 40 {
+	if !validUserID(id) {
 		return store.ErrUserIDFormat
 	}
-	for _, r := range id {
-		if r > 0x7e || r < 0x21 {
-			return store.ErrUserIDFormat
-		}
+	if b.dir == "" {
+		return store.ErrNoDataDir
 	}
-	err := mygo.Secrets.Set(userIDKey, []byte(id))
-	if err != nil && !errors.Is(err, errors.ErrUnsupported) {
+	if err := writeUserID(b.dir, id); err != nil {
 		return err
-	}
-	if err != nil {
-		err = store.ErrSessionOnly
 	}
 	b.mu.Lock()
 	b.userID = id
@@ -290,7 +284,7 @@ func (b *Backend) storeUserID(id string) error {
 			r.link.Wake()
 		}
 	})
-	return err
+	return nil
 }
 
 // ImportUserID copies the account ID from the telemetry app's Keychain

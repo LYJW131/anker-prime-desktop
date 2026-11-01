@@ -5,8 +5,8 @@ name: Release
 # installed apps read, and the release is published once all have uploaded.
 # The notes of the update window come from CHANGELOG.md. The macOS app is
 # signed with the self-signed certificate in MACOS_SIGNING_IDENTITY (key and
-# certificate, PEM): one identity across versions keeps the Keychain and
-# Bluetooth grants of installed apps.
+# certificate, PEM): one identity across versions keeps the Bluetooth
+# grant of installed apps.
 
 on:
   push:

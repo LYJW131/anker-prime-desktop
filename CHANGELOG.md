@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+- The account ID moves from the Keychain to a file of the app's data folder
+  that only you can read: macOS no longer asks for your password after an
+  update. The first launch moves it, which may ask one last time.
+- The macOS app is signed with one certificate from now on, so it keeps its
+  Bluetooth permission across updates. After this update macOS asks once
+  more.
+- The charger shows "—" for a port until its first reading, instead of
+  idle and 0 W, and leaves out the cable, protocol and device lines it does
+  not know.
+- Changing the language, theme or menu bar no longer reconnects the
+  devices.
+
 ## 1.0.1
 
 - Windows: saving settings while a device is connecting no longer drops

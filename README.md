@@ -30,10 +30,7 @@ Get it from [Releases](https://github.com/LYJW131/anker-prime-desktop/releases):
 - **Windows 10+**: `anker-prime-desktop-setup-<version>-<arch>.exe`. It is
   not code-signed yet, so SmartScreen asks first: More info → Run anyway.
 - **Linux** (BlueZ): the `.deb`, or the `.tar.gz` for other distributions.
-  Not tested on real hardware yet. The Anker account ID is kept through
-  libsecret, so it needs a Secret Service on the session bus (GNOME Keyring,
-  KWallet or KeePassXC); without one the app keeps the ID only for the
-  session. The `.deb` depends on `libsecret-1-0`.
+  Not tested on real hardware yet.
 
 After that it updates itself: it checks GitHub once a day, and on demand
 from "Check for Updates…" in its menus.
@@ -53,7 +50,8 @@ it shows a Dock icon while its window is open.
 The charger and power bank stream only to a session that presents the
 Anker account ID the devices are bound to (40 characters). The app reads it
 once — pasted, from a one-time Anker login, or on macOS imported from the
-Keychain — and keeps it in the system's secret store.
+Keychain — and keeps it in a file of its data folder that only you can
+read (`anker-user-id`).
 
 `-demo` runs on made-up devices; `-demo -shots <dir>` captures every screen
 and quits (`-theme`, `-lang` force a theme or language).

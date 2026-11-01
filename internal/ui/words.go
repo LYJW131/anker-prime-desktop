@@ -47,8 +47,8 @@ func ErrText(err error) string {
 		return locales.ErrTimeout()
 	case errors.Is(err, store.ErrUserIDFormat):
 		return locales.ErrUserIDFormat()
-	case errors.Is(err, store.ErrSessionOnly):
-		return locales.ErrSessionOnly()
+	case errors.Is(err, store.ErrNoDataDir):
+		return locales.ErrNoDataDir()
 	case errors.Is(err, store.ErrImportNotFound):
 		return locales.ErrImportNotFound()
 	}

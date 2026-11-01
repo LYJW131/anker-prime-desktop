@@ -3,8 +3,8 @@ SHOTS ?= build/shots
 BIN = Anker Prime Desktop
 APP = build/darwin-$(shell $(GO) env GOARCH)/$(BIN).app
 # The self-signed identity releases are signed with, when the login Keychain
-# has it, else ad hoc. One identity keeps the Keychain and Bluetooth grants
-# across rebuilds.
+# has it, else ad hoc. One identity keeps the Bluetooth grant across
+# rebuilds.
 SIGN ?= $(shell security find-identity -p codesigning 2>/dev/null | grep -q '"$(BIN)"' && echo "$(BIN)" || echo -)
 
 .PHONY: build app run demo test vet shots

@@ -808,8 +808,8 @@
   "@errImportNotFound": {
     "description": "An error, as a status line or a toast's reason."
   },
-  "errSessionOnly": "Kept for this session only: no secret store available",
-  "@errSessionOnly": {
+  "errNoDataDir": "No data folder to keep the account ID in",
+  "@errNoDataDir": {
     "description": "An error, as a status line or a toast's reason."
   },
   "noticeCoverShown": "Showing “{name}”",

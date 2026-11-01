@@ -181,7 +181,7 @@
   "errTimeout": "タイムアウトしました",
   "errUserIDFormat": "アカウント ID は英数字 40 文字です",
   "errImportNotFound": "テレメトリセンターのキーチェーン項目にアカウント ID がありません",
-  "errSessionOnly": "今回の起動中のみ有効：利用できるシークレットストアがありません",
+  "errNoDataDir": "アカウント ID を保存するデータフォルダがありません",
   "noticeCoverShown": "「{name}」に切り替えました",
   "noticeCoverFailed": "カバーを切り替えられませんでした",
   "noticeCoverAdded": "「{name}」を追加しました",

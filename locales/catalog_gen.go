@@ -2576,18 +2576,18 @@ func (msgs Messages) ErrImportNotFound() string {
 	return Catalog.Format(msgs.locale, "errImportNotFound", nil)
 }
 
-// ErrSessionOnly says "Kept for this session only: no secret store available"
+// ErrNoDataDir says "No data folder to keep the account ID in"
 // in the language the app shows.
 //
 // An error, as a status line or a toast's reason.
-func ErrSessionOnly() string { return In(i18n.Locale()).ErrSessionOnly() }
+func ErrNoDataDir() string { return In(i18n.Locale()).ErrNoDataDir() }
 
-// ErrSessionOnly says "Kept for this session only: no secret store available"
+// ErrNoDataDir says "No data folder to keep the account ID in"
 // in the language of msgs.
 //
 // An error, as a status line or a toast's reason.
-func (msgs Messages) ErrSessionOnly() string {
-	return Catalog.Format(msgs.locale, "errSessionOnly", nil)
+func (msgs Messages) ErrNoDataDir() string {
+	return Catalog.Format(msgs.locale, "errNoDataDir", nil)
 }
 
 // NoticeCoverShown says "Showing “{name}”"
