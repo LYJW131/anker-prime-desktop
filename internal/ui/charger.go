@@ -66,7 +66,9 @@ func (a *App) chargerPort(c *ui.Context, k *Tokens, i int, p device.Port, dim bo
 	ui.Column(c.Key(p.Name)).Padding(padCard).Gap(12).Radius(radiusCard).Background(k.Raise).MinWidth(0).Children(func() {
 		on := p.Active && !dim
 		kind, word, ic := pillWait, locales.PortIdle(), (*ui.SVG)(nil)
-		if p.Active {
+		if !p.Sampled {
+			word = none
+		} else if p.Active {
 			kind, word, ic = pillRun, locales.PortOutput(), icArrowOut
 		}
 		portHead(c, k, k.Ports[i%len(k.Ports)], p.Name, kind, ic, word)
@@ -74,14 +76,21 @@ func (a *App) chargerPort(c *ui.Context, k *Tokens, i int, p device.Port, dim bo
 		if !on {
 			col = k.Faint
 		}
-		bigValue(c, k, watts(p.PowerW), "W", "000.0", 34, col)
+		power, voltage, current := none, none, none
+		if p.Sampled {
+			power, voltage, current = watts(p.PowerW), fmt.Sprintf("%.2f", p.VoltageV), fmt.Sprintf("%.2f", p.CurrentA)
+		}
+		bigValue(c, k, power, "W", "000.0", 34, col)
 		ui.Row(c).Gap(8).Children(func() {
-			metric(c, k, locales.MetricVoltage(), fmt.Sprintf("%.2f", p.VoltageV), "V", !on)
-			metric(c, k, locales.MetricCurrent(), fmt.Sprintf("%.2f", p.CurrentA), "A", !on)
+			metric(c, k, locales.MetricVoltage(), voltage, "V", !on)
+			metric(c, k, locales.MetricCurrent(), current, "A", !on)
 		})
-		// Three lines of what is plugged in, or one line in the same room.
+		// Reserve room for port details while omitting unknown fields.
 		ui.Column(c.Key("lines")).Height(3 * 26).Children(func() {
-			if !p.Active && str(p.Cable) == "" && str(p.DeviceName) == "" {
+			if !p.Active && str(p.Cable) == "" && str(p.DeviceName) == "" && str(p.Vendor) == "" && str(p.ChargingInfo) == "" {
+				if !p.Sampled {
+					return
+				}
 				ui.Column(c).Grow(1).Center().Children(func() {
 					ui.Text(c, locales.PortNothing()).FontSize(12).TextColor(k.Faint)
 				})
@@ -91,9 +100,15 @@ func (a *App) chargerPort(c *ui.Context, k *Tokens, i int, p device.Port, dim bo
 			if devName == "" {
 				devName = str(p.Vendor)
 			}
-			portLine(c, k, icCable, locales.PortCable(), str(p.Cable))
-			portLine(c, k, icBolt, locales.PortProtocol(), str(p.ChargingInfo))
-			portLine(c, k, icLaptop, locales.PortDevice(), devName)
+			if cable := str(p.Cable); cable != "" {
+				portLine(c, k, icCable, locales.PortCable(), cable)
+			}
+			if protocol := str(p.ChargingInfo); protocol != "" {
+				portLine(c, k, icBolt, locales.PortProtocol(), protocol)
+			}
+			if devName != "" {
+				portLine(c, k, icLaptop, locales.PortDevice(), devName)
+			}
 		})
 	})
 }

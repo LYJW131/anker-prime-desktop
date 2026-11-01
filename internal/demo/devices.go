@@ -79,7 +79,7 @@ func (b *Backend) chargerAt(id string, dd *demoDev, at time.Time) {
 	ports := []device.Port{
 		port("C1", 20.07, mac, "EPR-240W MAX", "Apple PD Fast Charging", "MacBook Pro series", "Apple"),
 		port("C2", 9.01, phone, "USB-C 60W", "USB PD 3.0", "iPhone", "Apple"),
-		{Name: "C3", Cable: sp("N/A"), ChargingInfo: sp("N/A")},
+		{Name: "C3", Sampled: true, Cable: sp("N/A"), ChargingInfo: sp("N/A")},
 	}
 	if c3On {
 		ports[2] = port("C3", 9.02, c3, "USB-C 100W", "USB PD 3.0 PPS", "Galaxy S24", "Samsung")
@@ -96,7 +96,7 @@ func (b *Backend) chargerAt(id string, dd *demoDev, at time.Time) {
 // port is an active output port drawing w at v volts.
 func port(name string, v, w float64, cable, info, dev, vendor string) device.Port {
 	out := "out"
-	return device.Port{Name: name, Mode: 1, Direction: &out, Active: true, Attached: true, Energized: true,
+	return device.Port{Name: name, Mode: 1, Direction: &out, Active: true, Attached: true, Energized: true, Sampled: true,
 		VoltageV: v, CurrentA: round(w/v, 0.001), PowerW: round(w, 0.01),
 		Cable: sp(cable), ChargingInfo: sp(info), DeviceName: sp(dev), Vendor: sp(vendor)}
 }
