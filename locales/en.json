@@ -592,24 +592,12 @@
   "@acctNotSet": {
     "description": "Settings: the Anker account card."
   },
-  "acctWayImport": "From Telemetry Center",
-  "@acctWayImport": {
-    "description": "The old telemetry app keeps the ID in the Keychain."
-  },
   "acctWayPaste": "Paste ID",
   "@acctWayPaste": {
     "description": "Settings: the Anker account card."
   },
-  "acctWayLogin": "Sign In",
-  "@acctWayLogin": {
-    "description": "Settings: the Anker account card."
-  },
-  "acctImport": "Import",
-  "@acctImport": {
-    "description": "Settings: the Anker account card."
-  },
-  "acctImporting": "Importing…",
-  "@acctImporting": {
+  "acctWayGenerate": "Generate",
+  "@acctWayGenerate": {
     "description": "Settings: the Anker account card."
   },
   "acctIDPlaceholder": "40-character account ID",
@@ -620,32 +608,16 @@
   "@acctSaving": {
     "description": "Settings: the Anker account card."
   },
-  "acctAccount": "Email or phone number",
-  "@acctAccount": {
+  "acctGenerate": "Generate Random ID",
+  "@acctGenerate": {
     "description": "Settings: the Anker account card."
   },
-  "acctPassword": "Password",
-  "@acctPassword": {
+  "acctGenerateNote": "Replaces the current ID; devices accept any",
+  "@acctGenerateNote": {
     "description": "Settings: the Anker account card."
   },
-  "acctLogin": "Sign In",
-  "@acctLogin": {
-    "description": "Settings: the Anker account card."
-  },
-  "acctLoggingIn": "Signing In…",
-  "@acctLoggingIn": {
-    "description": "Settings: the Anker account card."
-  },
-  "acctLoginNote": "Signing in signs the phone app out",
-  "@acctLoginNote": {
-    "description": "Settings: the Anker account card."
-  },
-  "acctImported": "Imported from Telemetry Center",
-  "@acctImported": {
-    "description": "Settings: the Anker account card."
-  },
-  "acctLoggedIn": "Signed in and saved the ID",
-  "@acctLoggedIn": {
+  "acctGenerated": "Generated and saved a new ID",
+  "@acctGenerated": {
     "description": "Settings: the Anker account card."
   },
   "setGeneral": "General",
@@ -802,10 +774,6 @@
   },
   "errUserIDFormat": "The account ID must be 40 letters and digits",
   "@errUserIDFormat": {
-    "description": "An error, as a status line or a toast's reason."
-  },
-  "errImportNotFound": "No account ID in Telemetry Center's Keychain item",
-  "@errImportNotFound": {
     "description": "An error, as a status line or a toast's reason."
   },
   "errNoDataDir": "No data folder to keep the account ID in",

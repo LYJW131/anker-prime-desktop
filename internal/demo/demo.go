@@ -14,7 +14,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/LYJW131/anker-prime-desktop/internal/cloud"
 	"github.com/LYJW131/anker-prime-desktop/internal/cover"
 	"github.com/LYJW131/anker-prime-desktop/internal/link"
 	"github.com/LYJW131/anker-prime-desktop/internal/model"
@@ -328,21 +327,9 @@ func (b *Backend) SetUserID(id string, done func(error)) {
 	})
 }
 
-// ImportUserID always finds the old app's ID.
-func (b *Backend) ImportUserID(done func(error)) {
-	b.later(400*time.Millisecond, "account", func() {
-		b.s.HasUserID = true
-		done(nil)
-	})
-}
-
-// Login refuses the password "wrong" and takes any other.
-func (b *Backend) Login(account, password string, done func(error)) {
-	b.later(1200*time.Millisecond, "account", func() {
-		if password == "wrong" {
-			done(&cloud.Error{Code: 26006, Message: "wrong account or password"})
-			return
-		}
+// GenerateUserID always succeeds.
+func (b *Backend) GenerateUserID(done func(error)) {
+	b.later(300*time.Millisecond, "account", func() {
 		b.s.HasUserID = true
 		done(nil)
 	})

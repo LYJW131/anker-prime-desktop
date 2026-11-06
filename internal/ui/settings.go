@@ -15,11 +15,9 @@ import (
 
 // settingsForm is the Settings page's state between frames.
 type settingsForm struct {
-	// acct is the account card's way in, among the tabs shown: import
-	// (macOS only), paste or sign in.
-	acct              int
-	pasteID           string
-	account, password string
+	// acct is the account card's way in: paste or generate.
+	acct    int
+	pasteID string
 	// busy is the account request on its way since busyFrom.
 	busy     bool
 	busyFrom time.Time
@@ -35,9 +33,8 @@ type acctResult int
 
 const (
 	acctNone acctResult = iota
-	acctImported
 	acctSaved
-	acctLoggedIn
+	acctGenerated
 )
 
 var themeNames = []string{"system", "light", "dark"}
@@ -326,7 +323,7 @@ func (a *App) panelSettingsCard(c *ui.Context, k *Tokens) {
 }
 
 // accountCard holds the Anker account ID the devices' sessions need: its
-// state, and three ways to set it.
+// state, and two ways to set it.
 func (a *App) accountCard(c *ui.Context, k *Tokens) {
 	f := &a.set
 	card(c.Key("account"), k).Gap(10).Children(func() {
@@ -337,12 +334,7 @@ func (a *App) accountCard(c *ui.Context, k *Tokens) {
 				pill(c, k, pillWarn, nil, locales.AcctNotSet())
 			}
 		})
-		// The Telemetry Center keeps the ID in the macOS Keychain only.
-		ways, skip := []string{locales.AcctWayImport(), locales.AcctWayPaste(), locales.AcctWayLogin()}, 0
-		if runtime.GOOS != "darwin" {
-			ways, skip = ways[1:], 1
-		}
-		segmented(c, k, "acct-way", &f.acct, ways).AlignSelf(ui.Start)
+		segmented(c, k, "acct-way", &f.acct, []string{locales.AcctWayPaste(), locales.AcctWayGenerate()}).AlignSelf(ui.Start)
 		slow := waited(c, f.busy, f.busyFrom)
 		done := func(ok acctResult) func(error) {
 			return func(err error) {
@@ -352,27 +344,16 @@ func (a *App) accountCard(c *ui.Context, k *Tokens) {
 					return
 				}
 				f.done, f.failed = ok, nil
-				f.pasteID, f.password = "", ""
+				f.pasteID = ""
 			}
 		}
 		start := func() {
 			f.busy, f.busyFrom = true, c.Now()
 		}
 		// Each way in takes the same room, so switching moves nothing below.
-		ui.Column(c.Key("acct-body")).Height(76).Gap(8).Justify(ui.Start).Children(func() {
-			switch f.acct + skip {
+		ui.Column(c.Key("acct-body")).Height(40).Gap(8).Justify(ui.Start).Children(func() {
+			switch f.acct {
 			case 0:
-				ui.Row(c).Gap(10).AlignItems(ui.Center).Children(func() {
-					text := locales.AcctImport()
-					if slow {
-						text = locales.AcctImporting()
-					}
-					if buttonOff(c, k, buttonPlain, text, icArrowIn, slow).Clicked() && !f.busy {
-						start()
-						a.Dev.ImportUserID(done(acctImported))
-					}
-				})
-			case 1:
 				ui.Row(c).Gap(8).AlignItems(ui.Center).Children(func() {
 					_, in := fieldBox(c, k, "paste-id", &f.pasteID, locales.AcctIDPlaceholder(), true)
 					in.Password()
@@ -386,23 +367,17 @@ func (a *App) accountCard(c *ui.Context, k *Tokens) {
 						a.Dev.SetUserID(id, done(acctSaved))
 					}
 				})
-			case 2:
-				ui.Row(c).Gap(8).Children(func() {
-					fieldBox(c, k, "account", &f.account, locales.AcctAccount(), false)
-					_, pw := fieldBox(c, k, "password", &f.password, locales.AcctPassword(), false)
-					pw.Password()
-				})
+			case 1:
 				ui.Row(c).Gap(10).AlignItems(ui.Center).Children(func() {
-					text := locales.AcctLogin()
+					text := locales.AcctGenerate()
 					if slow {
-						text = locales.AcctLoggingIn()
+						text = locales.AcctSaving()
 					}
-					off := slow || f.account == "" || f.password == ""
-					if buttonOff(c, k, buttonPrimary, text, nil, off).Clicked() && !f.busy {
+					if buttonOff(c, k, buttonPrimary, text, nil, slow).Clicked() && !f.busy {
 						start()
-						a.Dev.Login(strings.TrimSpace(f.account), f.password, done(acctLoggedIn))
+						a.Dev.GenerateUserID(done(acctGenerated))
 					}
-					ui.Text(c, locales.AcctLoginNote()).FontSize(11.5).TextColor(k.Faint).SingleLine().Shrink(1).MinWidth(0).Ellipsis("…")
+					ui.Text(c, locales.AcctGenerateNote()).FontSize(11.5).TextColor(k.Faint).SingleLine().Shrink(1).MinWidth(0).Ellipsis("…")
 				})
 			}
 		})
@@ -411,12 +386,10 @@ func (a *App) accountCard(c *ui.Context, k *Tokens) {
 			switch {
 			case f.failed != nil:
 				text, col = ErrText(f.failed), k.Bad
-			case f.done == acctImported:
-				text = locales.AcctImported()
 			case f.done == acctSaved:
 				text = locales.AcctSaved()
-			case f.done == acctLoggedIn:
-				text = locales.AcctLoggedIn()
+			case f.done == acctGenerated:
+				text = locales.AcctGenerated()
 			}
 			if text != "" {
 				ui.Text(c, text).FontSize(12).TextColor(col).SingleLine().Ellipsis("…")

@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+- The app no longer talks to Anker's servers: the Anker sign-in and the
+  Telemetry Center import are gone. The account ID only marks the session,
+  so paste yours or generate a random one in Settings.
+
 ## 1.0.2
 
 - The account ID moves from the Keychain to a file of the app's data folder

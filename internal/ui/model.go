@@ -35,8 +35,7 @@ type Backend interface {
 	RenameCover(id int, name string)
 	CoverData(it cover.Item) []byte
 	SetUserID(id string, done func(error))
-	ImportUserID(done func(error))
-	Login(account, password string, done func(error))
+	GenerateUserID(done func(error))
 	SaveSettings(s settings.Settings) // follows devices added/removed/enabled/idle-sleep changes; called before Store.Settings takes s
 }
 

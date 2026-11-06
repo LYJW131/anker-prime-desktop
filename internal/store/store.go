@@ -121,8 +121,7 @@ const (
 
 // Errors of the account ID actions, which the views word.
 var (
-	ErrUserIDFormat   = errors.New("the account ID must be 40 letters and digits")
-	ErrImportNotFound = errors.New("no account ID in the telemetry app's Keychain item")
+	ErrUserIDFormat = errors.New("the account ID must be 40 letters and digits")
 	// ErrNoDataDir says there is no user data directory to keep the ID in.
 	ErrNoDataDir = errors.New("no user data directory to keep the account ID in")
 )

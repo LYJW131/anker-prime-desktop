@@ -33,8 +33,8 @@ README.md has the layout; docs/adding-a-device.md the path for a new model.
   directory, mode 0600, not the Keychain (`internal/backend#userIDFile`
   says why). Never log or print it. `ANKER_USER_ID` overrides it for
   development builds.
-- Logging in to the Anker cloud can sign the phone app out: only on the
-  user's click, never in tests (cloud tests use `httptest`).
+- The app never talks to Anker's servers. The account ID only marks the
+  session: the user pastes one or the app generates a random one.
 - Covers need no cloud: any id below 65536 works, and the charger keeps the
   last four pushed (docs/screensaver.md).
 

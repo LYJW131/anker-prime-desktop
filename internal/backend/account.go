@@ -1,6 +1,8 @@
 package backend
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"os"
 	"path/filepath"
 	"strings"
@@ -24,6 +26,13 @@ func validUserID(id string) bool {
 		}
 	}
 	return true
+}
+
+// newUserID returns a random ID of the account ID's form: 40 hex digits.
+func newUserID() string {
+	b := make([]byte, 20)
+	rand.Read(b)
+	return hex.EncodeToString(b)
 }
 
 // readUserID returns the ID in dir, or "" without a valid one.

@@ -6,9 +6,7 @@ import (
 	"context"
 	"log/slog"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"runtime"
 	"slices"
 	"strings"
 	"sync"
@@ -17,7 +15,6 @@ import (
 	"github.com/egoist/mygo"
 
 	"github.com/LYJW131/anker-prime-desktop/internal/ble"
-	"github.com/LYJW131/anker-prime-desktop/internal/cloud"
 	"github.com/LYJW131/anker-prime-desktop/internal/cover"
 	"github.com/LYJW131/anker-prime-desktop/internal/device"
 	"github.com/LYJW131/anker-prime-desktop/internal/link"
@@ -29,12 +26,6 @@ import (
 // userIDKey is the secret store item earlier versions kept the Anker
 // account ID in, which Start moves to userIDFile.
 const userIDKey = "anker-user-id"
-
-// The telemetry app's Keychain item, which ImportUserID copies.
-const (
-	telemetryService = "com.liangyangjunwei.MacTelemetryHub"
-	telemetryAccount = "anker-user-id"
-)
 
 // scanFor is how long an add-device scan runs.
 const scanFor = 30 * time.Second
@@ -287,36 +278,11 @@ func (b *Backend) storeUserID(id string) error {
 	return nil
 }
 
-// ImportUserID copies the account ID from the telemetry app's Keychain
-// item. macOS may ask once whether this app may read it.
-func (b *Backend) ImportUserID(done func(error)) {
-	if runtime.GOOS != "darwin" {
-		b.s.Post(func() { done(store.ErrImportNotFound) })
-		return
-	}
+// GenerateUserID stores a new random account ID. The devices take any ID
+// of the right form: it only marks the session.
+func (b *Backend) GenerateUserID(done func(error)) {
 	go func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
-		defer cancel()
-		out, err := exec.CommandContext(ctx, "/usr/bin/security", "find-generic-password", "-s", telemetryService, "-a", telemetryAccount, "-w").Output()
-		if err != nil {
-			err = store.ErrImportNotFound
-		} else {
-			err = b.storeUserID(strings.TrimSpace(string(out)))
-		}
-		b.s.Post(func() { done(err) })
-	}()
-}
-
-// Login signs in once to learn the account ID. The password and token are
-// not kept. Signing in can sign the phone app out.
-func (b *Backend) Login(account, password string, done func(error)) {
-	go func() {
-		ctx, cancel := context.WithTimeout(context.Background(), 40*time.Second)
-		defer cancel()
-		sess, err := (&cloud.Client{}).Login(ctx, account, password)
-		if err == nil {
-			err = b.storeUserID(sess.UserID)
-		}
+		err := b.storeUserID(newUserID())
 		b.s.Post(func() { done(err) })
 	}()
 }

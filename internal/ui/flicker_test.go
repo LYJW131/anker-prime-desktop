@@ -159,13 +159,17 @@ func TestSelectingACoverDoesNotFlash(t *testing.T) {
 	}
 }
 
-func TestImportingTheAccountIDDoesNotFlash(t *testing.T) {
+func TestGeneratingTheAccountIDDoesNotFlash(t *testing.T) {
 	r := newRig(t, "dark", 1280, 1400, false)
 	r.a.GoSettings()
 	r.a.Store.HasUserID = false
 	r.tt.Frame()
-	noFlash(t, r.tt, locales.AcctImport(), r.flush)
-	r.want(t, locales.AcctImported(), locales.AcctSaved())
+	if err := r.tt.Click(locales.AcctWayGenerate()); err != nil {
+		t.Fatal(err)
+	}
+	r.tt.Frame()
+	noFlash(t, r.tt, locales.AcctGenerate(), r.flush)
+	r.want(t, locales.AcctGenerated(), locales.AcctSaved())
 }
 
 func TestReconnectDoesNotFlash(t *testing.T) {

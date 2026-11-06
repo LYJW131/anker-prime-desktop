@@ -1930,20 +1930,6 @@ func (msgs Messages) AcctNotSet() string {
 	return Catalog.Format(msgs.locale, "acctNotSet", nil)
 }
 
-// AcctWayImport says "From Telemetry Center"
-// in the language the app shows.
-//
-// The old telemetry app keeps the ID in the Keychain.
-func AcctWayImport() string { return In(i18n.Locale()).AcctWayImport() }
-
-// AcctWayImport says "From Telemetry Center"
-// in the language of msgs.
-//
-// The old telemetry app keeps the ID in the Keychain.
-func (msgs Messages) AcctWayImport() string {
-	return Catalog.Format(msgs.locale, "acctWayImport", nil)
-}
-
 // AcctWayPaste says "Paste ID"
 // in the language the app shows.
 //
@@ -1958,46 +1944,18 @@ func (msgs Messages) AcctWayPaste() string {
 	return Catalog.Format(msgs.locale, "acctWayPaste", nil)
 }
 
-// AcctWayLogin says "Sign In"
+// AcctWayGenerate says "Generate"
 // in the language the app shows.
 //
 // Settings: the Anker account card.
-func AcctWayLogin() string { return In(i18n.Locale()).AcctWayLogin() }
+func AcctWayGenerate() string { return In(i18n.Locale()).AcctWayGenerate() }
 
-// AcctWayLogin says "Sign In"
+// AcctWayGenerate says "Generate"
 // in the language of msgs.
 //
 // Settings: the Anker account card.
-func (msgs Messages) AcctWayLogin() string {
-	return Catalog.Format(msgs.locale, "acctWayLogin", nil)
-}
-
-// AcctImport says "Import"
-// in the language the app shows.
-//
-// Settings: the Anker account card.
-func AcctImport() string { return In(i18n.Locale()).AcctImport() }
-
-// AcctImport says "Import"
-// in the language of msgs.
-//
-// Settings: the Anker account card.
-func (msgs Messages) AcctImport() string {
-	return Catalog.Format(msgs.locale, "acctImport", nil)
-}
-
-// AcctImporting says "Importing…"
-// in the language the app shows.
-//
-// Settings: the Anker account card.
-func AcctImporting() string { return In(i18n.Locale()).AcctImporting() }
-
-// AcctImporting says "Importing…"
-// in the language of msgs.
-//
-// Settings: the Anker account card.
-func (msgs Messages) AcctImporting() string {
-	return Catalog.Format(msgs.locale, "acctImporting", nil)
+func (msgs Messages) AcctWayGenerate() string {
+	return Catalog.Format(msgs.locale, "acctWayGenerate", nil)
 }
 
 // AcctIDPlaceholder says "40-character account ID"
@@ -2028,102 +1986,46 @@ func (msgs Messages) AcctSaving() string {
 	return Catalog.Format(msgs.locale, "acctSaving", nil)
 }
 
-// AcctAccount says "Email or phone number"
+// AcctGenerate says "Generate Random ID"
 // in the language the app shows.
 //
 // Settings: the Anker account card.
-func AcctAccount() string { return In(i18n.Locale()).AcctAccount() }
+func AcctGenerate() string { return In(i18n.Locale()).AcctGenerate() }
 
-// AcctAccount says "Email or phone number"
+// AcctGenerate says "Generate Random ID"
 // in the language of msgs.
 //
 // Settings: the Anker account card.
-func (msgs Messages) AcctAccount() string {
-	return Catalog.Format(msgs.locale, "acctAccount", nil)
+func (msgs Messages) AcctGenerate() string {
+	return Catalog.Format(msgs.locale, "acctGenerate", nil)
 }
 
-// AcctPassword says "Password"
+// AcctGenerateNote says "Replaces the current ID; devices accept any"
 // in the language the app shows.
 //
 // Settings: the Anker account card.
-func AcctPassword() string { return In(i18n.Locale()).AcctPassword() }
+func AcctGenerateNote() string { return In(i18n.Locale()).AcctGenerateNote() }
 
-// AcctPassword says "Password"
+// AcctGenerateNote says "Replaces the current ID; devices accept any"
 // in the language of msgs.
 //
 // Settings: the Anker account card.
-func (msgs Messages) AcctPassword() string {
-	return Catalog.Format(msgs.locale, "acctPassword", nil)
+func (msgs Messages) AcctGenerateNote() string {
+	return Catalog.Format(msgs.locale, "acctGenerateNote", nil)
 }
 
-// AcctLogin says "Sign In"
+// AcctGenerated says "Generated and saved a new ID"
 // in the language the app shows.
 //
 // Settings: the Anker account card.
-func AcctLogin() string { return In(i18n.Locale()).AcctLogin() }
+func AcctGenerated() string { return In(i18n.Locale()).AcctGenerated() }
 
-// AcctLogin says "Sign In"
+// AcctGenerated says "Generated and saved a new ID"
 // in the language of msgs.
 //
 // Settings: the Anker account card.
-func (msgs Messages) AcctLogin() string {
-	return Catalog.Format(msgs.locale, "acctLogin", nil)
-}
-
-// AcctLoggingIn says "Signing In…"
-// in the language the app shows.
-//
-// Settings: the Anker account card.
-func AcctLoggingIn() string { return In(i18n.Locale()).AcctLoggingIn() }
-
-// AcctLoggingIn says "Signing In…"
-// in the language of msgs.
-//
-// Settings: the Anker account card.
-func (msgs Messages) AcctLoggingIn() string {
-	return Catalog.Format(msgs.locale, "acctLoggingIn", nil)
-}
-
-// AcctLoginNote says "Signing in signs the phone app out"
-// in the language the app shows.
-//
-// Settings: the Anker account card.
-func AcctLoginNote() string { return In(i18n.Locale()).AcctLoginNote() }
-
-// AcctLoginNote says "Signing in signs the phone app out"
-// in the language of msgs.
-//
-// Settings: the Anker account card.
-func (msgs Messages) AcctLoginNote() string {
-	return Catalog.Format(msgs.locale, "acctLoginNote", nil)
-}
-
-// AcctImported says "Imported from Telemetry Center"
-// in the language the app shows.
-//
-// Settings: the Anker account card.
-func AcctImported() string { return In(i18n.Locale()).AcctImported() }
-
-// AcctImported says "Imported from Telemetry Center"
-// in the language of msgs.
-//
-// Settings: the Anker account card.
-func (msgs Messages) AcctImported() string {
-	return Catalog.Format(msgs.locale, "acctImported", nil)
-}
-
-// AcctLoggedIn says "Signed in and saved the ID"
-// in the language the app shows.
-//
-// Settings: the Anker account card.
-func AcctLoggedIn() string { return In(i18n.Locale()).AcctLoggedIn() }
-
-// AcctLoggedIn says "Signed in and saved the ID"
-// in the language of msgs.
-//
-// Settings: the Anker account card.
-func (msgs Messages) AcctLoggedIn() string {
-	return Catalog.Format(msgs.locale, "acctLoggedIn", nil)
+func (msgs Messages) AcctGenerated() string {
+	return Catalog.Format(msgs.locale, "acctGenerated", nil)
 }
 
 // SetGeneral says "General"
@@ -2560,20 +2462,6 @@ func ErrUserIDFormat() string { return In(i18n.Locale()).ErrUserIDFormat() }
 // An error, as a status line or a toast's reason.
 func (msgs Messages) ErrUserIDFormat() string {
 	return Catalog.Format(msgs.locale, "errUserIDFormat", nil)
-}
-
-// ErrImportNotFound says "No account ID in Telemetry Center's Keychain item"
-// in the language the app shows.
-//
-// An error, as a status line or a toast's reason.
-func ErrImportNotFound() string { return In(i18n.Locale()).ErrImportNotFound() }
-
-// ErrImportNotFound says "No account ID in Telemetry Center's Keychain item"
-// in the language of msgs.
-//
-// An error, as a status line or a toast's reason.
-func (msgs Messages) ErrImportNotFound() string {
-	return Catalog.Format(msgs.locale, "errImportNotFound", nil)
 }
 
 // ErrNoDataDir says "No data folder to keep the account ID in"

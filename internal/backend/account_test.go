@@ -73,3 +73,10 @@ func TestLoadUserIDWithoutOne(t *testing.T) {
 		}
 	}
 }
+
+func TestNewUserID(t *testing.T) {
+	a, b := newUserID(), newUserID()
+	if !validUserID(a) || a == b {
+		t.Fatalf("newUserID = %q, %q", a, b)
+	}
+}

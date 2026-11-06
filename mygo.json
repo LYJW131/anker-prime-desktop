@@ -2,7 +2,7 @@
   "name": "Anker Prime Desktop",
   "slug": "anker-prime-desktop",
   "identifier": "me.lyjw.ankerprimedesktop",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "icon": "resources/icon.png",
   "out": "build",
   "macos": {

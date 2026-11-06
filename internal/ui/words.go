@@ -49,8 +49,6 @@ func ErrText(err error) string {
 		return locales.ErrUserIDFormat()
 	case errors.Is(err, store.ErrNoDataDir):
 		return locales.ErrNoDataDir()
-	case errors.Is(err, store.ErrImportNotFound):
-		return locales.ErrImportNotFound()
 	}
 	return err.Error()
 }

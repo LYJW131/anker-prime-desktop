@@ -47,11 +47,11 @@ open "build/darwin-arm64/Anker Prime Desktop.app"
 The first launch asks for Bluetooth access. The app lives in the menu bar;
 it shows a Dock icon while its window is open.
 
-The charger and power bank stream only to a session that presents the
-Anker account ID the devices are bound to (40 characters). The app reads it
-once — pasted, from a one-time Anker login, or on macOS imported from the
-Keychain — and keeps it in a file of its data folder that only you can
-read (`anker-user-id`).
+The charger and power bank stream only to a session that presents an
+account ID of 40 characters. The ID only marks the session: any one works.
+Paste yours or let the app generate a random one in Settings; it keeps it
+in a file of its data folder that only you can read (`anker-user-id`). The
+app never talks to Anker's servers.
 
 `-demo` runs on made-up devices; `-demo -shots <dir>` captures every screen
 and quits (`-theme`, `-lang` force a theme or language).
@@ -66,7 +66,6 @@ internal/model     the supported models
 internal/ble       Bluetooth LE without cgo: CoreBluetooth, WinRT, BlueZ
 internal/link      one device's session: connect, handshake, re-arm, reconnect, covers
 internal/cover     the local cover library
-internal/cloud     optional Anker login, to learn the account ID
 internal/backend   ties the above to the app
 internal/ui, app   views, window, menu bar item and panel
 debugger/          the Python reverse-engineering tool the protocol was worked out with
